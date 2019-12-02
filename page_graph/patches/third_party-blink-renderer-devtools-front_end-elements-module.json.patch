@@ -1,0 +1,36 @@
+diff --git a/third_party/blink/renderer/devtools/front_end/elements/module.json b/third_party/blink/renderer/devtools/front_end/elements/module.json
+index 52c482733e9bdd2f0e8af758c4101d6a5ecf4ebe..a184d79e7536ba6737db929c93c573d8a64ae141 100644
+--- a/third_party/blink/renderer/devtools/front_end/elements/module.json
++++ b/third_party/blink/renderer/devtools/front_end/elements/module.json
+@@ -302,6 +302,15 @@
+             "order": 7,
+             "persistence": "permanent",
+             "className": "Elements.PropertiesWidget"
++        },
++        {
++            "type": "view",
++            "location": "elements-sidebar",
++            "id": "elements.domPageGraphInfo",
++            "title": "Page Graph",
++            "order": 7,
++            "persistence": "permanent",
++            "className": "Elements.PageGraphInfoWidget"
+         }
+     ],
+     "dependencies": [
+@@ -312,6 +321,7 @@
+         "event_listeners"
+     ],
+     "scripts": [
++        "../../../../../../brave/third_party/blink/renderer/devtools/front_end/elements/PageGraphInfoWidget.js",
+         "InspectElementModeController.js",
+         "ColorSwatchPopoverIcon.js",
+         "ComputedStyleModel.js",
+@@ -336,6 +346,7 @@
+         "ElementsTreeElementHighlighter.js"
+     ],
+     "resources": [
++        "../../../../../../brave/third_party/blink/renderer/devtools/front_end/elements/pageGraphInfoWidget.css",
+         "breadcrumbs.css",
+         "classesPaneWidget.css",
+         "computedStyleSidebarPane.css",

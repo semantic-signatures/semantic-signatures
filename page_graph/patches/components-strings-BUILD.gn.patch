@@ -1,0 +1,13 @@
+diff --git a/components/strings/BUILD.gn b/components/strings/BUILD.gn
+index 0317fd69c368022e584ff6e63201a35beeaf7464..ac221fa7a55018ad9196953de934330bd5658c1b 100644
+--- a/components/strings/BUILD.gn
++++ b/components/strings/BUILD.gn
+@@ -106,7 +106,7 @@ if (is_android) {
+ }
+ 
+ grit("components_chromium_strings") {
+-  source = "../components_chromium_strings.grd"
++  source = "../components_${branding_path_component}_strings.grd"
+   outputs = [
+     "grit/components_chromium_strings.h",
+   ]

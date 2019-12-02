@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/media/webrtc/webrtc_event_log_uploader.cc b/chrome/browser/media/webrtc/webrtc_event_log_uploader.cc
+index 5c2e6bd6b4a1afded26813a3c2f7b6cbdefd3363..9c814712d18b5296e16845bff0a72eac986ccfbf 100644
+--- a/chrome/browser/media/webrtc/webrtc_event_log_uploader.cc
++++ b/chrome/browser/media/webrtc/webrtc_event_log_uploader.cc
+@@ -268,6 +268,7 @@ bool WebRtcEventLogUploaderImpl::PrepareUploadData(std::string* upload_data) {
+ }
+ 
+ void WebRtcEventLogUploaderImpl::StartUpload(const std::string& upload_data) {
++  return; // feature disabled in Brave
+   DCHECK(io_task_runner_->RunsTasksInCurrentSequence());
+ 
+   auto resource_request = std::make_unique<network::ResourceRequest>();

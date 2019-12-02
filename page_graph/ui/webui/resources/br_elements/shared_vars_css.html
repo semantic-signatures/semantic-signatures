@@ -1,0 +1,61 @@
+<link rel="import" href="chrome://resources/html/polymer.html">
+
+<!-- Use 'custom-style' to inject style (mainly override css vars)
+    in most chromium polymer modules.
+    This will only work for properties which cascade through
+    shadow DOM.
+    See https://polymer-library.polymer-project.org/1.0/docs/devguide/styling
+-->
+<custom-style>
+  <style is="custom-style">
+    html {
+      --interactive-color: var(--cr-link-color) !important;
+      --brave-focus-outline: auto 3px var(--flat-focus-shadow-color);
+      --disabled-color: rgb(241, 243, 244);
+      --cr-link-color: rgb(255, 69, 48) !important;
+      --cr-link-color-rgb: 255, 69, 48;
+      --flat-focus-shadow-color: rgba(255, 69, 48, .4) !important;
+      --cr-selectable-focus_-_outline: var(--brave-focus-outline) !important;
+      --cr-primary-text-color: #343546 !important;
+      --cr-primary-text_-_font-weight: 600 !important;
+      --cr-secondary-text_-_color: #A0A1B2 !important;
+      --cr-card-elevation_-_box-shadow: 0 !important;
+      --cr-card-border-radius: 4px !important;
+    }
+    html[dark] {
+      --cr-primary-text-color: #F4F4F4 !important;
+      --cr-secondary-text_-_color: #AEB1C2 !important;
+    }
+  </style>
+</custom-style>
+
+<!-- Some modules declare variables in :host
+      which cannot be overriden by custom-style (e.g. cr-checkbox)
+      For these, we define a style module and use it as an 'include'
+      in containing apps.
+-->
+<dom-module id="br-shared-style">
+  <template>
+    <style>
+      :host {
+        --cr-radio-button-checked-color: var(--cr-link-color) !important;
+          --cr-radio-button-checked-ripple-color:
+            rgba(var(--cr-link-color-rgb), .2) !important;
+      }
+      :focus {
+        outline-color: var(--flat-focus-shadow-color);
+        outline-width: 3px;
+      }
+      cr-checkbox {
+        --cr-checkbox-checked-box-color: var(--cr-link-color) !important;
+        --cr-checkbox-ripple-checked-color: var(--cr-link-color) !important;
+      }
+      h1, h2, h3, h4, h5, h6, button {
+        font-family: Poppins;
+      }
+      .label:not(.secondary) {
+        font-weight: 500;
+      }
+    </style>
+  </template>
+</dom-module>

@@ -1,0 +1,107 @@
+diff --git a/third_party/blink/renderer/modules/webgl/webgl2_rendering_context_base.cc b/third_party/blink/renderer/modules/webgl/webgl2_rendering_context_base.cc
+index 3f94f1cc0901cccd9dd054b9b20e040ff7068daf..ccd99a74a4352713b5afbd1e0cdd92cd7bc6f67e 100644
+--- a/third_party/blink/renderer/modules/webgl/webgl2_rendering_context_base.cc
++++ b/third_party/blink/renderer/modules/webgl/webgl2_rendering_context_base.cc
+@@ -9,6 +9,7 @@
+ #include "base/numerics/checked_math.h"
+ #include "base/numerics/safe_conversions.h"
+ #include "base/stl_util.h"
++#include "brave/renderer/brave_content_settings_observer_helper.h"
+ #include "gpu/command_buffer/client/gles2_interface.h"
+ #include "third_party/blink/public/platform/web_graphics_context_3d_provider.h"
+ #include "third_party/blink/renderer/bindings/modules/v8/webgl_any.h"
+@@ -32,6 +33,11 @@
+ #include "third_party/blink/renderer/modules/webgl/webgl_vertex_array_object.h"
+ #include "third_party/blink/renderer/platform/wtf/text/wtf_string.h"
+ 
++#include "brave/third_party/blink/brave_page_graph/buildflags/buildflags.h"
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++#include "brave/third_party/blink/brave_page_graph/page_graph.h"
++#endif
++
+ using WTF::String;
+ 
+ namespace blink {
+@@ -5007,8 +5013,35 @@ ScriptValue WebGL2RenderingContextBase::getParameter(ScriptState* script_state,
+                                                      GLenum pname) {
+   if (isContextLost())
+     return ScriptValue::CreateNull(script_state);
++  if (canvas() && !AllowFingerprinting(canvas()->GetDocument().GetFrame()))
++    return ScriptValue::CreateNull(script_state);
++
+   switch (pname) {
+     case GL_SHADING_LANGUAGE_VERSION: {
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++      {
++        ScriptValue result = WebGLAny(
++          script_state,
++          "WebGL GLSL ES 3.00 (" +
++              String(ContextGL()->GetString(GL_SHADING_LANGUAGE_VERSION)) +
++              ")");
++        brave_page_graph::PageGraph* page_graph =
++          canvas()->GetDocument().GetPageGraph();
++        if (page_graph != nullptr) {
++          std::vector<const String> args;
++          args.push_back("gl.SHADING_LANGUAGE_VERSION");
++          page_graph->RegisterWebAPICall("WebGL2RenderingContext.getParameter",
++            args);
++
++          String res;
++          result.ToString(res);
++          page_graph->RegisterWebAPIResult(
++            "WebGL2RenderingContext.getParameter", res);
++        }
++
++        return result;
++      }
++#endif
+       return WebGLAny(
+           script_state,
+           "WebGL GLSL ES 3.00 (" +
+@@ -5016,6 +5049,28 @@ ScriptValue WebGL2RenderingContextBase::getParameter(ScriptState* script_state,
+               ")");
+     }
+     case GL_VERSION:
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++      {
++        ScriptValue result = WebGLAny(
++          script_state,
++          "WebGL 2.0 (" + String(ContextGL()->GetString(GL_VERSION)) + ")");
++        brave_page_graph::PageGraph* page_graph =
++          canvas()->GetDocument().GetPageGraph();
++        if (page_graph != nullptr) {
++          std::vector<const String> args;
++          args.push_back("gl.VERSION");
++          page_graph->RegisterWebAPICall("WebGL2RenderingContext.getParameter",
++            args);
++
++          String res;
++          result.ToString(res);
++          page_graph->RegisterWebAPIResult(
++            "WebGL2RenderingContext.getParameter", res);
++        }
++
++        return result;
++      }
++#endif
+       return WebGLAny(
+           script_state,
+           "WebGL 2.0 (" + String(ContextGL()->GetString(GL_VERSION)) + ")");
+@@ -5548,6 +5603,8 @@ ScriptValue WebGL2RenderingContextBase::getFramebufferAttachmentParameter(
+   if (isContextLost() || !ValidateGetFramebufferAttachmentParameterFunc(
+                              kFunctionName, target, attachment))
+     return ScriptValue::CreateNull(script_state);
++  if (canvas() && !AllowFingerprinting(canvas()->GetDocument().GetFrame()))
++    return ScriptValue::CreateNull(script_state);
+ 
+   WebGLFramebuffer* framebuffer_binding = GetFramebufferBinding(target);
+   DCHECK(!framebuffer_binding || framebuffer_binding->Object());
+@@ -5760,6 +5817,8 @@ ScriptValue WebGL2RenderingContextBase::getTexParameter(
+     GLenum pname) {
+   if (isContextLost() || !ValidateTextureBinding("getTexParameter", target))
+     return ScriptValue::CreateNull(script_state);
++  if (canvas() && !AllowFingerprinting(canvas()->GetDocument().GetFrame()))
++    return ScriptValue::CreateNull(script_state);
+ 
+   switch (pname) {
+     case GL_TEXTURE_WRAP_R:

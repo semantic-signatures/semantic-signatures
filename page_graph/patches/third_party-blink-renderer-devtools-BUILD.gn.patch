@@ -1,0 +1,13 @@
+diff --git a/third_party/blink/renderer/devtools/BUILD.gn b/third_party/blink/renderer/devtools/BUILD.gn
+index a4c42c096209038679c2e7d97bc585e0af09b6b3..d6437dd05c3a9dba2b41d2fcbd8cebd8398ab6bf 100644
+--- a/third_party/blink/renderer/devtools/BUILD.gn
++++ b/third_party/blink/renderer/devtools/BUILD.gn
+@@ -7,6 +7,8 @@ import("//third_party/blink/public/public_features.gni")
+ import("//third_party/blink/renderer/core/core.gni")
+ 
+ all_devtools_files = [
++  "../../../../brave/third_party/blink/renderer/devtools/front_end/elements/pageGraphInfoWidget.css",
++  "../../../../brave/third_party/blink/renderer/devtools/front_end/elements/PageGraphInfoWidget.js",
+   "front_end/accessibility/AccessibilityModel.js",
+   "front_end/accessibility/accessibilityNode.css",
+   "front_end/accessibility/AccessibilityNodeView.js",

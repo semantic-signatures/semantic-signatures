@@ -1,0 +1,12 @@
+diff --git a/third_party/blink/renderer/core/BUILD.gn b/third_party/blink/renderer/core/BUILD.gn
+index 9bf980cb52680d2ebbd89409527ce523f17645fe..d57089d092b9a1c279ec9827935ae7b35037bf29 100644
+--- a/third_party/blink/renderer/core/BUILD.gn
++++ b/third_party/blink/renderer/core/BUILD.gn
+@@ -217,6 +217,7 @@ component("core") {
+     "//v8",
+   ]
+   deps = [
++    "//brave/third_party/blink/brave_page_graph",
+     "//third_party/blink/public/common",
+     "//third_party/blink/renderer/platform",
+     "//third_party/blink/renderer/platform/wtf",

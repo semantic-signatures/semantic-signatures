@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/safe_browsing/client_side_model_loader.cc b/chrome/browser/safe_browsing/client_side_model_loader.cc
+index 6fb89519648ed59105205b3b6956e0df1adf658f..44666009646cedca3fcb992d1b137d09b1eefee1 100644
+--- a/chrome/browser/safe_browsing/client_side_model_loader.cc
++++ b/chrome/browser/safe_browsing/client_side_model_loader.cc
+@@ -35,7 +35,7 @@ namespace safe_browsing {
+ const size_t ModelLoader::kMaxModelSizeBytes = 150 * 1024;
+ const int ModelLoader::kClientModelFetchIntervalMs = 3600 * 1000;
+ const char ModelLoader::kClientModelUrlPrefix[] =
+-    "https://ssl.gstatic.com/safebrowsing/csd/";
++    "https://static.brave.com/safebrowsing/csd/";
+ const char ModelLoader::kClientModelNamePattern[] =
+     "client_model_v5%s_variation_%d.pb";
+ const char ModelLoader::kClientModelFinchExperiment[] =

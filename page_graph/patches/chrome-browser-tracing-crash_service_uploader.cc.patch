@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/tracing/crash_service_uploader.cc b/chrome/browser/tracing/crash_service_uploader.cc
+index 53d2bd1f88963776fe4dc0c165cb9fe289988e71..8d861ec4f2a1f5f75529176d7248de4f57b6c56d 100644
+--- a/chrome/browser/tracing/crash_service_uploader.cc
++++ b/chrome/browser/tracing/crash_service_uploader.cc
+@@ -41,7 +41,7 @@ using std::string;
+ 
+ namespace {
+ 
+-const char kUploadURL[] = "https://clients2.google.com/cr/report";
++const char kUploadURL[] = "https://no-thanks.invalid";
+ const char kCrashUploadContentType[] = "multipart/form-data";
+ const char kCrashMultipartBoundary[] =
+     "----**--yradnuoBgoLtrapitluMklaTelgooG--**----";

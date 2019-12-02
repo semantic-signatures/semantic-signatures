@@ -1,0 +1,84 @@
+diff --git a/chrome/installer/linux/debian/build.sh b/chrome/installer/linux/debian/build.sh
+index 306b59c138b7cb5df21ad6e9d502bb7a46a104c6..a8ff37b5a7d31b442e3fe812a0d9d091d7eda66d 100755
+--- a/chrome/installer/linux/debian/build.sh
++++ b/chrome/installer/linux/debian/build.sh
+@@ -21,7 +21,7 @@ gen_changelog() {
+   process_template "${SCRIPTDIR}/changelog.template" "${DEB_CHANGELOG}"
+   debchange -a --nomultimaint -m --changelog "${DEB_CHANGELOG}" \
+     "Release Notes: ${RELEASENOTES}"
+-  GZLOG="${STAGEDIR}/usr/share/doc/${PACKAGE}-${CHANNEL}/changelog.gz"
++  GZLOG="${STAGEDIR}/usr/share/doc/${PACKAGEANDCHANNEL}/changelog.gz"
+   mkdir -p "$(dirname "${GZLOG}")"
+   gzip -9 -c "${DEB_CHANGELOG}" > "${GZLOG}"
+   chmod 644 "${GZLOG}"
+@@ -30,7 +30,7 @@ gen_changelog() {
+ # Create the Debian control file needed by dpkg-deb.
+ gen_control() {
+   dpkg-gencontrol -v"${VERSIONFULL}" -c"${DEB_CONTROL}" -l"${DEB_CHANGELOG}" \
+-  -f"${DEB_FILES}" -p"${PACKAGE}-${CHANNEL}" -P"${STAGEDIR}" \
++  -f"${DEB_FILES}" -p"${PACKAGEANDCHANNEL}" -P"${STAGEDIR}" \
+   -O > "${STAGEDIR}/DEBIAN/control"
+   rm -f "${DEB_CONTROL}"
+ }
+@@ -41,7 +41,7 @@ prep_staging_debian() {
+   install -m 755 -d "${STAGEDIR}/DEBIAN" \
+     "${STAGEDIR}/etc/cron.daily" \
+     "${STAGEDIR}/usr/share/menu" \
+-    "${STAGEDIR}/usr/share/doc/${USR_BIN_SYMLINK_NAME}"
++    "${STAGEDIR}/usr/share/doc/${PACKAGEANDCHANNEL}"
+ }
+ 
+ # Put the package contents in the staging area.
+@@ -92,7 +92,7 @@ verify_package() {
+   local EXPECTED_DEPENDS="${TMPFILEDIR}/expected_deb_depends"
+   local ACTUAL_DEPENDS="${TMPFILEDIR}/actual_deb_depends"
+   echo ${DEPENDS} | sed 's/, /\n/g' | LANG=C sort > "${EXPECTED_DEPENDS}"
+-  dpkg -I "${PACKAGE}-${CHANNEL}_${VERSIONFULL}_${ARCHITECTURE}.deb" | \
++  dpkg -I "${PACKAGEANDCHANNEL}_${VERSIONFULL}_${ARCHITECTURE}.deb" | \
+       grep '^ Depends: ' | sed 's/^ Depends: //' | sed 's/, /\n/g' | \
+       LANG=C sort > "${ACTUAL_DEPENDS}"
+   BAD_DIFF=0
+@@ -156,9 +156,13 @@ verify_channel() {
+       RELEASENOTES="http://googlechromereleases.blogspot.com/search/label/Stable%20updates"
+       ;;
+     unstable|dev|alpha )
+-      CHANNEL=unstable
++      CHANNEL=dev
+       RELEASENOTES="http://googlechromereleases.blogspot.com/search/label/Dev%20updates"
+       ;;
++    nightly )
++      CHANNEL=nightly
++      RELEASENOTES="https://community.brave.com"
++      ;;
+     testing|beta )
+       CHANNEL=beta
+       RELEASENOTES="http://googlechromereleases.blogspot.com/search/label/Beta%20updates"
+@@ -259,6 +263,17 @@ fi
+ eval $(sed -e "s/^\([^=]\+\)=\(.*\)$/export \1='\2'/" \
+   "${BUILDDIR}/installer/theme/BRANDING")
+ 
++PACKAGEANDCHANNEL="${PACKAGE}-${CHANNEL}"
++if [ "$CHANNEL" = "unstable" ]; then
++  PACKAGEANDCHANNEL="${PACKAGE}-dev"
++fi
++if [ "$CHANNEL" = "dev" ]; then
++  PACKAGEANDCHANNEL="${PACKAGE}-dev"
++fi
++if [ "$CHANNEL" = "stable" ]; then
++  PACKAGEANDCHANNEL="${PACKAGE}"
++fi
++
+ verify_channel
+ 
+ # Some Debian packaging tools want these set.
+@@ -270,6 +285,10 @@ COMMON_DEPS=$(sed ':a;N;$!ba;s/\n/, /g' "${DEB_COMMON_DEPS}")
+ COMMON_PREDEPS="dpkg (>= 1.14.0)"
+ COMMON_RECOMMENDS="libu2f-udev"
+ 
++# Ensure that our signing key is up-to-date (brave/brave-browser#4205).
++if [ "$CHANNEL" = "stable" ]; then
++  COMMON_DEPS="${COMMON_DEPS}, brave-keyring"
++fi
+ 
+ # Make everything happen in the OUTPUTDIR.
+ cd "${OUTPUTDIR}"

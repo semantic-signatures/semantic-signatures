@@ -1,0 +1,18 @@
+diff --git a/chrome/browser/resources/history/side_bar.html b/chrome/browser/resources/history/side_bar.html
+index 73fa9dec87d708187f12c3d39a757f24a59b5c04..baccb2ac4c46eae75065fedea0cf8da8fccb167f 100644
+--- a/chrome/browser/resources/history/side_bar.html
++++ b/chrome/browser/resources/history/side_bar.html
+@@ -119,11 +119,13 @@
+         $i18n{historyMenuItem}
+         <paper-ripple></paper-ripple>
+       </a>
++<!--
+       <a href="/syncedTabs" class="page-item" path="syncedTabs"
+           on-click="onItemClick_">
+         $i18n{openTabsMenuItem}
+         <paper-ripple></paper-ripple>
+       </a>
++-->
+       <div class="separator"></div>
+       <a id="clear-browsing-data"
+           href="chrome://settings/clearBrowserData"

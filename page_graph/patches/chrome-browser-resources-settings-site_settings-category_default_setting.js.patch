@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/resources/settings/site_settings/category_default_setting.js b/chrome/browser/resources/settings/site_settings/category_default_setting.js
+index 12f8c830dbcc3835a4142125aba0eff5a0f09f1c..b47d168b99a45eb288fd18165661a43213303a2d 100644
+--- a/chrome/browser/resources/settings/site_settings/category_default_setting.js
++++ b/chrome/browser/resources/settings/site_settings/category_default_setting.js
+@@ -116,6 +116,7 @@ Polymer({
+                                    settings.ContentSetting.BLOCK);
+         break;
+       case settings.ContentSettingsTypes.AUTOMATIC_DOWNLOADS:
++      case settings.ContentSettingsTypes.AUTOPLAY:
+       case settings.ContentSettingsTypes.CAMERA:
+       case settings.ContentSettingsTypes.CLIPBOARD:
+       case settings.ContentSettingsTypes.GEOLOCATION:

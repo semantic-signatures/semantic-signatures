@@ -1,0 +1,28 @@
+diff --git a/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl b/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl
+index 0f225228984274aaa13fe563c5d96cbdf447aa11..3cb695e8eb5c315f51f457fff67eeae632fce29f 100644
+--- a/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl
++++ b/third_party/blink/renderer/modules/csspaint/paint_rendering_context_2d.idl
+@@ -58,10 +58,10 @@
+ 
+     void clip(optional CanvasFillRule winding);
+     void clip(Path2D path, optional CanvasFillRule winding);
+-    [HighEntropy, Measure] boolean isPointInPath(unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
+-    [HighEntropy, Measure] boolean isPointInPath(Path2D path, unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
+-    [HighEntropy, Measure] boolean isPointInStroke(unrestricted double x, unrestricted double y);
+-    [HighEntropy, Measure] boolean isPointInStroke(Path2D path, unrestricted double x, unrestricted double y);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInPath(unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInPath(Path2D path, unrestricted double x, unrestricted double y, optional CanvasFillRule winding);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInStroke(unrestricted double x, unrestricted double y);
++    [CallWith=ScriptState, HighEntropy, Measure] boolean isPointInStroke(Path2D path, unrestricted double x, unrestricted double y);
+ 
+     // drawing images
+     [CallWith=ScriptState, RaisesException] void drawImage(CanvasImageSource image, unrestricted double x, unrestricted double y);
+@@ -77,7 +77,7 @@
+ 
+     // dashed lines
+     void setLineDash(sequence<unrestricted double> dash);
+-    sequence<unrestricted double> getLineDash();
++    [CallWith=ScriptState] sequence<unrestricted double> getLineDash();
+     attribute unrestricted double lineDashOffset;
+ };
+ PaintRenderingContext2D includes CanvasPath;

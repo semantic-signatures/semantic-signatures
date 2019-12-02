@@ -1,0 +1,19 @@
+diff --git a/content/renderer/render_thread_impl.cc b/content/renderer/render_thread_impl.cc
+index a908f83034f553b3b6769d75e295eeee2602bfc6..a441cddb2c2ceabad14f6f171ee9af90e7cff466 100644
+--- a/content/renderer/render_thread_impl.cc
++++ b/content/renderer/render_thread_impl.cc
+@@ -1220,6 +1220,14 @@ void RenderThreadImpl::InitializeWebKit(
+ }
+ 
+ void RenderThreadImpl::RegisterSchemes() {
++#if defined(BRAVE_CHROMIUM_BUILD)
++  // brave:
++  WebString brave_scheme(WebString::FromASCII(kBraveUIScheme));
++  WebSecurityPolicy::RegisterURLSchemeAsDisplayIsolated(brave_scheme);
++  WebSecurityPolicy::RegisterURLSchemeAsNotAllowingJavascriptURLs(
++      brave_scheme);
++#endif
++
+   // chrome:
+   WebString chrome_scheme(WebString::FromASCII(kChromeUIScheme));
+   WebSecurityPolicy::RegisterURLSchemeAsDisplayIsolated(chrome_scheme);

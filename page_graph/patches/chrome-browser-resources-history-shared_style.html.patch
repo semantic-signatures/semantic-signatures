@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/resources/history/shared_style.html b/chrome/browser/resources/history/shared_style.html
+index c915d823deba82b930f25f8d67e8c7fd02ffa6f3..0c4dca553bdad35ed97df1e5239ed48d7a7e3eb1 100644
+--- a/chrome/browser/resources/history/shared_style.html
++++ b/chrome/browser/resources/history/shared_style.html
+@@ -4,7 +4,7 @@
+ 
+ <dom-module id="shared-style">
+   <template>
+-    <style include="cr-hidden-style">
++    <style include="cr-hidden-style br-shared-style">
+       a {
+         color: var(--cr-link-color);
+         text-decoration: none;

@@ -1,0 +1,20 @@
+diff --git a/chrome/common/extensions/chrome_extensions_client.cc b/chrome/common/extensions/chrome_extensions_client.cc
+index 6827e128ca67baea23c65875b75724f0064dfee3..99cc0279f91a0cb8336d139a466ce6f731b8340d 100644
+--- a/chrome/common/extensions/chrome_extensions_client.cc
++++ b/chrome/common/extensions/chrome_extensions_client.cc
+@@ -13,6 +13,7 @@
+ #include "base/metrics/histogram_macros.h"
+ #include "base/strings/string_util.h"
+ #include "base/values.h"
++#include "brave/common/extensions/brave_extensions_api_provider.h"
+ #include "chrome/common/chrome_switches.h"
+ #include "chrome/common/extensions/api/extension_action/action_info.h"
+ #include "chrome/common/extensions/chrome_extensions_api_provider.h"
+@@ -57,6 +58,7 @@ const char kThumbsWhiteListedExtension[] = "khopmbdjffemhegeeobelklnbglcdgfh";
+ ChromeExtensionsClient::ChromeExtensionsClient() {
+   AddAPIProvider(std::make_unique<ChromeExtensionsAPIProvider>());
+   AddAPIProvider(std::make_unique<CoreExtensionsAPIProvider>());
++  AddAPIProvider(std::make_unique<BraveExtensionsAPIProvider>());
+ }
+ 
+ ChromeExtensionsClient::~ChromeExtensionsClient() {

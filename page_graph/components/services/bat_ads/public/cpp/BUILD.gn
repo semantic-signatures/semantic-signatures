@@ -1,0 +1,24 @@
+source_set("cpp") {
+  sources = [
+    "ads_client_mojo_bridge.cc",
+    "ads_client_mojo_bridge.h",
+  ]
+
+  deps = [
+    "//brave/components/services/bat_ads/public/interfaces",
+    "//brave/vendor/bat-native-ads",
+  ]
+}
+
+source_set("manifest") {
+  sources = [
+    "manifest.cc",
+    "manifest.h",
+  ]
+
+  deps = [
+    "//base",
+    "//services/service_manager/public/cpp",
+    "//brave/components/services/bat_ads/public/interfaces",
+  ]
+}

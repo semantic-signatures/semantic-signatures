@@ -1,0 +1,92 @@
+<html>
+<head>
+<script>
+let expectedImgLoaded = 0
+let expectedImgLoadedBlank = 0
+let expectedImgBlocked = 0
+let expectedXHRLoaded = 0
+let expectedXHRLoadedBlank = 0
+let expectedXHRBlocked = 0
+let numXHRLoaded = 0
+let numXHRLoadedBlank = 0
+let numXHRBlocked = 0
+let numImgLoaded = 0
+let numImgLoadedBlank = 0
+let numImgBlocked = 0
+
+// Performs an XHR for the specified src
+function xhr(src) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', src, true);
+  xhr.onload = function(e) {
+    if (xhr.response.length !== 0) {
+      numXHRLoaded++
+    } else {
+      numXHRLoadedBlank++
+    }
+    onLoad()
+  }
+  xhr.onerror = function(e) {
+    numXHRBlocked++
+    onLoad()
+  }
+  xhr.send();
+}
+
+// Adds an image to the DOM with the specified src
+function addImage(src) {
+  const img = document.createElement('img')
+  img.src = src
+  img.className = 'adImage'
+  img.addEventListener('load', onLoad)
+  img.addEventListener('error', () => {
+    onLoad()
+  })
+
+  img.addEventListener('load', () => {
+    if (img.complete &&
+        (img.naturalHeight !== 1 || img.naturalWidth !== 1)) {
+      numImgLoaded++
+    } else {
+      numImgLoadedBlank++
+    }
+    onLoad()
+  })
+  img.addEventListener('error', () => {
+    numImgBlocked++
+    onLoad()
+  })
+  document.body.appendChild(img)
+}
+
+// Sets the expectation for the number of images and XHR loaded and blocked
+function setExpectations(numImgLoaded, numImgLoadedBlank, numImgBlocked, numXHRLoaded, numXHRLoadedBlank, numXHRBlocked) {
+  expectedImgLoaded = numImgLoaded
+  expectedImgLoadedBlank = numImgLoadedBlank
+  expectedImgBlocked = numImgBlocked
+  expectedXHRLoaded = numXHRLoaded
+  expectedXHRLoadedBlank = numXHRLoadedBlank
+  expectedXHRBlocked = numXHRBlocked
+}
+
+function onLoad() {
+  if (numImgLoaded + numImgLoadedBlank + numImgBlocked !== expectedImgLoaded + expectedImgBlocked + expectedImgLoadedBlank ||
+      numXHRLoaded + numXHRLoadedBlank + numXHRBlocked !== expectedXHRLoaded + expectedXHRLoadedBlank + expectedXHRBlocked) {
+    return;
+  }
+  const result = numImgLoaded == expectedImgLoaded &&
+      expectedImgLoadedBlank == numImgLoadedBlank &&
+      expectedImgBlocked == numImgBlocked &&
+      numXHRLoaded === expectedXHRLoaded &&
+      numXHRLoadedBlank === expectedXHRLoadedBlank &&
+      numXHRBlocked === expectedXHRBlocked
+  // For debugging:
+  // console.log('sending: ' + JSON.stringify({result, expectedImgLoaded, expectedImgLoadedBlank, expectedImgBlocked, numImgLoadedBlank, numImgBlocked,
+  //   numXHRLoaded, expectedXHRLoaded, numXHRLoadedBlank, numXHRBlocked, expectedXHRLoadedBlank, expectedXHRBlocked}))
+  window.domAutomationController.send(result)
+}
+</script>
+</head>
+<body>
+</body>
+</html>

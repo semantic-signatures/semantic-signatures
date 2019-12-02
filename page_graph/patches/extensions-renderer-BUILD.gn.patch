@@ -1,0 +1,13 @@
+diff --git a/extensions/renderer/BUILD.gn b/extensions/renderer/BUILD.gn
+index a5a7e0707319d3c26ce832d4a88c37aaaefda70b..ea2fa36066f9d731bb6a101164e57e917845f861 100644
+--- a/extensions/renderer/BUILD.gn
++++ b/extensions/renderer/BUILD.gn
+@@ -263,6 +263,8 @@ jumbo_source_set("renderer") {
+     "//third_party/cld_3/src/src:cld_3",
+   ]
+ 
++  if (brave_chromium_build) { deps += [ "//brave/extensions/renderer"] }
++
+   if (proprietary_codecs && enable_wifi_display) {
+     sources += [
+       "api/display_source/wifi_display/wifi_display_audio_encoder.cc",

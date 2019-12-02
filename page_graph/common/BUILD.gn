@@ -1,0 +1,134 @@
+import("//build/util/branding.gni")
+import("//extensions/buildflags/buildflags.gni")
+
+source_set("channel_info") {
+  if (is_linux) {
+    sources = [
+      "brave_channel_info_posix.cc",
+      "brave_channel_info_posix.h",
+    ]
+
+    deps = [
+      "//base:logging_buildflags",
+    ]
+
+    configs += [
+      "//brave/build/linux:linux_channel_names",
+    ]
+  }
+}
+
+source_set("pref_names") {
+  sources = [
+    "pref_names.cc",
+    "pref_names.h",
+  ]
+}
+
+source_set("common") {
+  sources = [
+    "brave_content_client.cc",
+    "brave_content_client.h",
+    "brave_isolated_worlds.h",
+    "brave_paths.cc",
+    "brave_paths.h",
+    "brave_switches.cc",
+    "brave_switches.h",
+    "common_message_generator.cc",
+    "common_message_generator.h",
+    "importer/brave_referral.cc",
+    "importer/brave_referral.h",
+    "importer/imported_browser_window.cc",
+    "importer/imported_browser_window.h",
+    "network_constants.cc",
+    "network_constants.h",
+    "resource_bundle_helper.cc",
+    "resource_bundle_helper.h",
+    "translate_network_constants.cc",
+    "translate_network_constants.h",
+    "url_constants.cc",
+    "url_constants.h",
+    "webui_url_constants.cc",
+    "webui_url_constants.h",
+  ]
+
+  if (!is_android) {
+    sources += [
+      "importer/brave_importer_utils.cc",
+      "importer/brave_importer_utils.h",
+      "importer/brave_ledger.cc",
+      "importer/brave_ledger.h",
+      "importer/brave_stats.h",
+      "importer/chrome_importer_utils.cc",
+      "importer/chrome_importer_utils.h",
+    ]
+  }
+
+  if (enable_extensions) {
+    sources += [
+      "extensions/brave_extensions_api_provider.cc",
+      "extensions/brave_extensions_api_provider.h",
+      "extensions/extension_constants.cc",
+      "extensions/extension_constants.h",
+    ]
+
+    public_deps = [
+      "extensions/api",
+    ]
+  }
+
+  deps = [
+    ":pref_names",
+    ":shield_exceptions",
+    "//brave/chromium_src:common",
+    "//content/public/common",
+  ]
+
+  if (is_mac) {
+    sources += [
+      "importer/brave_importer_utils_mac.mm",
+      "importer/chrome_importer_utils_mac.mm",
+    ]
+  }
+
+  if (is_linux) {
+    sources += [
+      "importer/brave_importer_utils_linux.cc",
+      "importer/chrome_importer_utils_linux.cc",
+    ]
+  }
+
+  if (is_win) {
+    sources += [
+      "importer/brave_importer_utils_win.cc",
+      "importer/chrome_importer_utils_win.cc",
+    ]
+  }
+}
+
+source_set("shield_exceptions") {
+  sources = [
+    "shield_exceptions.cc",
+    "shield_exceptions.h",
+  ]
+
+  deps = [
+    "//url",
+  ]
+  if (is_android) {
+    deps += [
+      "//brave/app/android:common_extensions",
+    ]
+  } else {
+    deps += [ "//extensions/common" ]
+  }
+}
+
+config("constants_configs") {
+  defines = []
+  if (is_mac) {
+    defines += [
+      "BRAVE_PRODUCT_STRING=\"$chrome_product_full_name\"",
+    ]
+  }
+}

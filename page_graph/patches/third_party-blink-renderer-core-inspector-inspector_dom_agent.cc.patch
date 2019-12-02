@@ -1,0 +1,41 @@
+diff --git a/third_party/blink/renderer/core/inspector/inspector_dom_agent.cc b/third_party/blink/renderer/core/inspector/inspector_dom_agent.cc
+index 35eb165bfdf749f2088f2349a31cd8c30c02bf48..c69eaa4996cb25e616d80e584579f51d238551df 100644
+--- a/third_party/blink/renderer/core/inspector/inspector_dom_agent.cc
++++ b/third_party/blink/renderer/core/inspector/inspector_dom_agent.cc
+@@ -88,6 +88,8 @@
+ #include "third_party/blink/renderer/platform/wtf/text/cstring.h"
+ #include "third_party/blink/renderer/platform/wtf/text/wtf_string.h"
+ 
++#include "brave/third_party/blink/brave_page_graph/buildflags/buildflags.h"
++
+ namespace blink {
+ 
+ using protocol::Maybe;
+@@ -2282,6 +2284,27 @@ Response InspectorDOMAgent::getFileInfo(const String& object_id, String* path) {
+   return Response::OK();
+ }
+ 
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++Response InspectorDOMAgent::reportPageGraphInfo(
++    int node_id,
++    std::unique_ptr<protocol::Array<String>>* report) {
++  *report = protocol::Array<String>::create();
++
++  Node* const node = NodeForId(node_id);
++  if (!node) {
++    return Response::Error("Could not find node with given id");
++  }
++
++  ::brave_page_graph::PageGraph* const page_graph =
++      node->GetDocument().GetPageGraph();
++  if (page_graph) {
++    page_graph->GenerateReportForNode(DOMNodeIds::IdForNode(node), **report);
++  }
++
++  return Response::OK();
++}
++#endif
++
+ void InspectorDOMAgent::Trace(blink::Visitor* visitor) {
+   visitor->Trace(dom_listener_);
+   visitor->Trace(inspected_frames_);

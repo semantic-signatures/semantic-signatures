@@ -1,0 +1,17 @@
+diff --git a/third_party/blink/renderer/core/html/html_link_element.cc b/third_party/blink/renderer/core/html/html_link_element.cc
+index 52bea7869e4a373a5071d616f19083638d88114a..10fd6b35ddda54c5474d792665f8395b8272398f 100644
+--- a/third_party/blink/renderer/core/html/html_link_element.cc
++++ b/third_party/blink/renderer/core/html/html_link_element.cc
+@@ -60,7 +60,11 @@ HTMLLinkElement::HTMLLinkElement(Document& document,
+       referrer_policy_(network::mojom::ReferrerPolicy::kDefault),
+       sizes_(MakeGarbageCollected<DOMTokenList>(*this, html_names::kSizesAttr)),
+       rel_list_(MakeGarbageCollected<RelList>(this)),
+-      created_by_parser_(flags.IsCreatedByParser()) {}
++      created_by_parser_(flags.IsCreatedByParser()) {
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++  link_loader_->SetHTMLLinkElementOwner(this);
++#endif
++}
+ 
+ HTMLLinkElement::~HTMLLinkElement() = default;
+ 

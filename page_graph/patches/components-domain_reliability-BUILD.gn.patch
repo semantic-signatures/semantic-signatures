@@ -1,0 +1,16 @@
+diff --git a/components/domain_reliability/BUILD.gn b/components/domain_reliability/BUILD.gn
+index 280cd663e6e1dbdd6fbe426211adb489a89fde4e..79771ecb3ac78f897f16e35d92499269d3582fc1 100644
+--- a/components/domain_reliability/BUILD.gn
++++ b/components/domain_reliability/BUILD.gn
+@@ -88,6 +88,11 @@ jumbo_component("domain_reliability") {
+     "//net",
+     "//url",
+   ]
++
++  cflags = []
++  if (is_clang) {
++    cflags += [ "-Wno-undefined-bool-conversion" ]
++  }
+ }
+ 
+ jumbo_source_set("unit_tests") {

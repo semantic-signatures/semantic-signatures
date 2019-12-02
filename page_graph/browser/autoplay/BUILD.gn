@@ -1,0 +1,15 @@
+import("//build/config/features.gni")
+
+source_set("autoplay") {
+  sources = [
+    "autoplay_permission_context.cc",
+    "autoplay_permission_context.h",
+  ]
+
+  deps = [
+    "//brave/components/brave_shields/browser",
+    "//chrome/common",
+    "//components/content_settings/core/common",
+    "//third_party/blink/public/mojom:web_feature_mojo_bindings",
+  ]
+}

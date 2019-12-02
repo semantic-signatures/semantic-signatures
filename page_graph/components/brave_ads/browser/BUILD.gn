@@ -1,0 +1,145 @@
+import("//brave/build/config.gni")
+import("//brave/components/brave_ads/browser/buildflags/buildflags.gni")
+import("//brave/components/brave_rewards/browser/buildflags/buildflags.gni")
+
+source_set("browser") {
+  public_deps = [
+    "buildflags",
+  ]
+
+  sources = [
+    "ads_service.h",
+    "ads_service_factory.cc",
+    "ads_service_factory.h",
+    "ads_tab_helper.cc",
+    "ads_tab_helper.h",
+  ]
+
+  deps = [
+    "//base",
+    "//brave/components/brave_ads/common",
+    "//brave/components/brave_rewards/common",
+    "//brave/components/brave_rewards/browser",
+    "//components/dom_distiller/content/browser",
+    "//components/dom_distiller/core",
+    "//components/keyed_service/content",
+    "//components/keyed_service/core",
+    "//components/prefs",
+    "//components/pref_registry",
+    "//components/sessions",
+    "//url",
+    # for profile.h
+    "//components/domain_reliability",
+    "//content/public/browser",
+    "//content/public/common",
+  ]
+
+  if (brave_ads_enabled) {
+    sources += [
+      "ad_notification.cc",
+      "ad_notification.h",
+      "ads_service_impl.cc",
+      "ads_service_impl.h",
+      "background_helper.cc",
+      "background_helper.h",
+      "background_helper_android.cc",
+      "background_helper_android.h",
+      "background_helper_linux.cc",
+      "background_helper_linux.h",
+      "background_helper_mac.mm",
+      "background_helper_mac.h",
+      "background_helper_win.cc",
+      "background_helper_win.h",
+      "locale_helper.cc",
+      "locale_helper.h",
+      "locale_helper_linux.cc",
+      "locale_helper_linux.h",
+      "locale_helper_mac.mm",
+      "locale_helper_mac.h",
+      "locale_helper_win.cc",
+      "locale_helper_win.h",
+      "locale_helper_android.cc",
+      "locale_helper_android.h",
+      "bundle_state_database.cc",
+      "bundle_state_database.h",
+      "notification_helper.cc",
+      "notification_helper.h",
+      "notification_helper_android.cc",
+      "notification_helper_android.h",
+      "notification_helper_linux.cc",
+      "notification_helper_linux.h",
+      "notification_helper_mac.cc",
+      "notification_helper_mac.h",
+      "notification_helper_win.cc",
+      "notification_helper_win.h",
+    ]
+
+    deps += [
+      "//brave/vendor/bat-native-ads",
+      "//brave/components/brave_ads/resources",
+      "//brave/components/services/bat_ads/public/cpp",
+      "//components/history/core/browser",
+      "//components/history/core/common",
+      "//components/wifi",
+      "//net",
+      "//services/network/public/cpp",
+      "//sql",
+      "//ui/base",
+      "//ui/message_center/public/cpp",
+    ]
+
+    if (is_win) {
+      deps += [
+        "//ui/views",
+        "//ui/gfx",
+      ]
+    }
+
+    if (is_android) {
+      deps += [
+        "//chrome/android:jni_headers",
+      ]
+    }
+  }
+}
+
+source_set("testutil") {
+  testonly = true
+
+  deps = [
+    ":browser",
+    "//base",
+    "//content/public/browser",
+    "//chrome/test:test_support",
+    "//testing/gtest",
+  ]
+
+  if (brave_rewards_enabled) {
+    deps += [
+      "//brave/vendor/bat-native-ledger",
+    ]
+
+    configs += [
+      "//brave/vendor/bat-native-ledger:internal_config"
+    ]
+  }
+
+  if (brave_ads_enabled) {
+    deps += [
+      "//brave/vendor/bat-native-ads",
+    ]
+
+    configs += [
+      "//brave/vendor/bat-native-ads:internal_config"
+    ]
+  }
+
+  sources = [
+    "test_util.cc",
+    "test_util.h",
+  ]
+
+  if (is_android) {
+    deps += [ "//chrome/android:test_support_jni_headers" ]
+  }
+}

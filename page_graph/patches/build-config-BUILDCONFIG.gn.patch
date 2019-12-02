@@ -1,0 +1,12 @@
+diff --git a/build/config/BUILDCONFIG.gn b/build/config/BUILDCONFIG.gn
+index 7063da0f26c5691f01214c2dc014128d7c8c5e09..3e18855c2a74036033999cd060a7f577925d0ee4 100644
+--- a/build/config/BUILDCONFIG.gn
++++ b/build/config/BUILDCONFIG.gn
+@@ -419,6 +419,7 @@ set_sources_assignment_filter(sources_assignment_filter)
+ 
+ # Holds all configs used for running the compiler.
+ default_compiler_configs = [
++  "//brave/build:compiler",
+   "//build/config:feature_flags",
+   "//build/config/compiler:afdo",
+   "//build/config/compiler:afdo_optimize_size",

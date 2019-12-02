@@ -1,0 +1,21 @@
+diff --git a/chrome/browser/ui/views/location_bar/location_bar_view.cc b/chrome/browser/ui/views/location_bar/location_bar_view.cc
+index 4fab5d0fd6bc6b6c47f4174dc1f611ba79610589..33ed86ccfadb68cbb2b0b6f321b59de995a2002c 100644
+--- a/chrome/browser/ui/views/location_bar/location_bar_view.cc
++++ b/chrome/browser/ui/views/location_bar/location_bar_view.cc
+@@ -443,7 +443,7 @@ void LocationBarView::OnKeywordFaviconFetched(const gfx::Image& icon) {
+   selected_keyword_view_->SetImage(icon.AsImageSkia());
+ }
+ 
+-void LocationBarView::Layout() {
++void LocationBarView::Layout(views::View* right_most) {
+   if (!IsInitialized())
+     return;
+ 
+@@ -550,6 +550,7 @@ void LocationBarView::Layout() {
+     }
+   };
+ 
++  BRAVE_LAYOUT_TRAILING_DECORATIONS
+   if (star_view_)
+     add_trailing_decoration(star_view_);
+   add_trailing_decoration(omnibox_page_action_icon_container_view_);

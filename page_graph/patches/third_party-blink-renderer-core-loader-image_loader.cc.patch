@@ -1,0 +1,98 @@
+diff --git a/third_party/blink/renderer/core/loader/image_loader.cc b/third_party/blink/renderer/core/loader/image_loader.cc
+index 6701f3ff8ef51ac0485d075c4e5f5fad0e95bd42..3055884971307f3c1cbe228abdd1e987daf516cd 100644
+--- a/third_party/blink/renderer/core/loader/image_loader.cc
++++ b/third_party/blink/renderer/core/loader/image_loader.cc
+@@ -23,6 +23,7 @@
+ #include "third_party/blink/renderer/core/loader/image_loader.h"
+ 
+ #include <memory>
++#include <sstream>
+ #include <utility>
+ 
+ #include "third_party/blink/public/mojom/fetch/fetch_api_request.mojom-shared.h"
+@@ -67,6 +68,15 @@
+ #include "third_party/blink/renderer/platform/weborigin/security_origin.h"
+ #include "third_party/blink/renderer/platform/weborigin/security_policy.h"
+ 
++#include "brave/third_party/blink/brave_page_graph/buildflags/buildflags.h"
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++#include "third_party/blink/renderer/core/dom/dom_node_ids.h"
++#include "brave/third_party/blink/brave_page_graph/types.h"
++#include "brave/third_party/blink/brave_page_graph/page_graph.h"
++#include "brave/third_party/blink/brave_page_graph/utilities/digest.h"
++#include "brave/third_party/blink/brave_page_graph/utilities/response_metadata.h"
++#endif
++
+ namespace blink {
+ 
+ namespace {
+@@ -635,7 +645,20 @@ void ImageLoader::DoUpdateFromElement(
+       params.SetLazyImageAutoReload();
+     }
+ 
+-    new_image_content = ImageResourceContent::Fetch(params, document.Fetcher());
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++  new_image_content = ImageResourceContent::Fetch(params, document.Fetcher(), &inspector_id_);
++  {
++    ::brave_page_graph::PageGraph* page_graph = element_->GetDocument().GetPageGraph();
++    if (page_graph != nullptr) {
++      auto node_id = DOMNodeIds::IdForNode(element_);
++      page_graph->RegisterRequestStartFromElm(
++        node_id, inspector_id_, url,
++        ::brave_page_graph::RequestType::kRequestTypeImage);
++    }
++  }
++#else
++  new_image_content = ImageResourceContent::Fetch(params, document.Fetcher());
++#endif
+ 
+     // If this load is starting while navigating away, treat it as an auditing
+     // keepalive request, and don't report its results back to the element.
+@@ -893,6 +916,25 @@ void ImageLoader::ImageNotifyFinished(ImageResourceContent* resource) {
+     return;
+   }
+ 
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++  {
++    ::brave_page_graph::PageGraph* page_graph = element_->GetDocument()
++        .GetPageGraph();
++    if (page_graph != nullptr) {
++      const ResourceResponse& rep = resource->GetResponse();
++      const ::brave_page_graph::ResponseMetadata metadata(rep);
++
++      if (resource->ErrorOccurred()) {
++        page_graph->RegisterRequestError(inspector_id_, metadata);
++      } else {
++        page_graph->RegisterRequestComplete(inspector_id_,
++            ResourceType::kImage, metadata,
++            brave_page_graph::ImageDigest(image_content_->GetImage()));
++      }
++    }
++  }
++#endif
++
+   if (resource->ErrorOccurred()) {
+     pending_load_event_.Cancel();
+ 
+@@ -969,8 +1011,9 @@ void ImageLoader::DispatchPendingLoadEvent(
+   if (!image_content_)
+     return;
+   CHECK(image_complete_);
+-  if (GetElement()->GetDocument().GetFrame())
++  if (GetElement()->GetDocument().GetFrame()) {
+     DispatchLoadEvent();
++  }
+ 
+   // Checks Document's load event synchronously here for performance.
+   // This is safe because DispatchPendingLoadEvent() is called asynchronously.
+@@ -979,8 +1022,9 @@ void ImageLoader::DispatchPendingLoadEvent(
+ 
+ void ImageLoader::DispatchPendingErrorEvent(
+     std::unique_ptr<IncrementLoadEventDelayCount> count) {
+-  if (GetElement()->GetDocument().GetFrame())
++  if (GetElement()->GetDocument().GetFrame()) {
+     GetElement()->DispatchEvent(*Event::Create(event_type_names::kError));
++  }
+ 
+   // Checks Document's load event synchronously here for performance.
+   // This is safe because DispatchPendingErrorEvent() is called asynchronously.

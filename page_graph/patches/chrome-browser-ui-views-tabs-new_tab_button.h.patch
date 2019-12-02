@@ -1,0 +1,27 @@
+diff --git a/chrome/browser/ui/views/tabs/new_tab_button.h b/chrome/browser/ui/views/tabs/new_tab_button.h
+index 211faf82c09c44ead799881d21c0ea22912a0620..08361bf1463eb75727fdb4062f25d83d392674d2 100644
+--- a/chrome/browser/ui/views/tabs/new_tab_button.h
++++ b/chrome/browser/ui/views/tabs/new_tab_button.h
+@@ -72,6 +72,7 @@ class NewTabButton : public views::ImageButton,
+   void RemoveLayerBeneathView(ui::Layer* old_layer) override;
+ 
+  private:
++  friend class BraveNewTabButton;
+ // views::ImageButton:
+ #if defined(OS_WIN)
+   void OnMouseReleased(const ui::MouseEvent& event) override;
+@@ -95,12 +96,14 @@ class NewTabButton : public views::ImageButton,
+   void PaintFill(gfx::Canvas* canvas) const;
+ 
+   // Paints a properly sized plus (+) icon into the center of the button.
++  virtual
+   void PaintPlusIcon(gfx::Canvas* canvas) const;
+ 
+   SkColor GetButtonFillColor() const;
+ 
+   // Returns the path for the given |origin| and |scale|.  If |extend_to_top| is
+   // true, the path is extended vertically to y = 0.
++  virtual
+   SkPath GetBorderPath(const gfx::Point& origin,
+                        float scale,
+                        bool extend_to_top) const;

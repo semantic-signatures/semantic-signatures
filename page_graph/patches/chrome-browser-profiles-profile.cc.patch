@@ -1,0 +1,22 @@
+diff --git a/chrome/browser/profiles/profile.cc b/chrome/browser/profiles/profile.cc
+index 71d736c9eaf3503e532d72c410f4d4dadff372cd..39114245329d5767f8b51a5c9120c76038018d04 100644
+--- a/chrome/browser/profiles/profile.cc
++++ b/chrome/browser/profiles/profile.cc
+@@ -140,7 +140,7 @@ const char Profile::kProfileKey[] = "__PROFILE__";
+ void Profile::RegisterProfilePrefs(user_prefs::PrefRegistrySyncable* registry) {
+   registry->RegisterBooleanPref(
+       prefs::kSearchSuggestEnabled,
+-      true,
++      false,
+       user_prefs::PrefRegistrySyncable::SYNCABLE_PREF);
+ #if defined(OS_ANDROID)
+   registry->RegisterStringPref(
+@@ -244,7 +244,7 @@ bool Profile::IsGuestSession() const {
+           chromeos::switches::kGuestSession);
+   return is_guest_session;
+ #else
+-  return is_guest_profile_;
++  return is_guest_profile_ || brave::IsTorProfile(this);
+ #endif
+ }
+ 

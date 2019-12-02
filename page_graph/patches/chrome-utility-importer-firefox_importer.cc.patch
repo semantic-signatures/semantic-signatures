@@ -1,0 +1,12 @@
+diff --git a/chrome/utility/importer/firefox_importer.cc b/chrome/utility/importer/firefox_importer.cc
+index ead3566635cc98c941eda0ea691c9655117b62f6..6dc907efceddfdb4705cd511f22f476cd5cb0937 100644
+--- a/chrome/utility/importer/firefox_importer.cc
++++ b/chrome/utility/importer/firefox_importer.cc
+@@ -166,7 +166,6 @@ void FirefoxImporter::StartImport(const importer::SourceProfile& source_profile,
+     ImportAutofillFormData();
+     bridge_->NotifyItemEnded(importer::AUTOFILL_FORM_DATA);
+   }
+-  bridge_->NotifyEnded();
+ }
+ 
+ void FirefoxImporter::ImportHistory() {

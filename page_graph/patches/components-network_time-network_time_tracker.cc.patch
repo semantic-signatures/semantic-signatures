@@ -1,0 +1,13 @@
+diff --git a/components/network_time/network_time_tracker.cc b/components/network_time/network_time_tracker.cc
+index cf0544d15bcb57a62dc3ddfca259e03a3aa2995b..0b1342ce528b2ae331c39b11319f9fea13903d4b 100644
+--- a/components/network_time/network_time_tracker.cc
++++ b/components/network_time/network_time_tracker.cc
+@@ -276,7 +276,7 @@ void NetworkTimeTracker::UpdateNetworkTime(base::Time network_time,
+ }
+ 
+ bool NetworkTimeTracker::AreTimeFetchesEnabled() const {
+-  return base::FeatureList::IsEnabled(kNetworkTimeServiceQuerying);
++  return false; // feature disabled in Brave
+ }
+ 
+ NetworkTimeTracker::FetchBehavior NetworkTimeTracker::GetFetchBehavior() const {

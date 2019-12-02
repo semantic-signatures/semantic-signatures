@@ -1,0 +1,84 @@
+diff --git a/chrome/installer/linux/BUILD.gn b/chrome/installer/linux/BUILD.gn
+index 05e0c5f9f789e140989b16e9a4347b4fd4d11e1f..403bc4300d732211fdbc1fc9fe3f29982666929f 100644
+--- a/chrome/installer/linux/BUILD.gn
++++ b/chrome/installer/linux/BUILD.gn
+@@ -27,8 +27,8 @@ declare_args() {
+ assert(is_linux)
+ 
+ packaging_files_executables = [
+-  "$root_out_dir/chrome",
+-  "$root_out_dir/chrome_sandbox",
++  "$root_out_dir/brave",
++  "$root_out_dir/brave_sandbox",
+ ]
+ packaging_files_shlibs = []
+ 
+@@ -156,12 +156,17 @@ action("merge_rpm_dependencies") {
+ }
+ 
+ action("strip_chrome_binary") {
+-  prog_name = "$root_out_dir/chrome"
++  prog_name = "$root_out_dir/brave"
+   debug_file = prog_name + ".debug"
+   stripped_file = prog_name + ".stripped"
+   deps = [
+     "//chrome",
+   ]
++  if (brave_chromium_build) {
++    deps += [
++      "//brave/build/linux:copy_exe",
++    ]
++  }
+   script = "//build/gn_run_binary.py"
+   sources = [
+     prog_name,
+@@ -221,7 +226,7 @@ branding_dir_100 =
+ copy("common_packaging_files") {
+   visibility = [ ":*" ]
+   sources = [
+-    "//chrome/app/resources/manpage.1.in",
++    "//brave/chromium_src/chrome/app/resources/manpage.1.in",
+     "common/apt.include",
+     "common/default-app-block.template",
+     "common/default-app.template",
+@@ -244,8 +249,8 @@ copy("common_packaging_files") {
+     ]
+   } else {
+     sources += [
+-      "common/chromium-browser/chromium-browser.appdata.xml",
+-      "common/chromium-browser/chromium-browser.info",
++      "//brave/chromium_src/chrome/installer/linux/common/brave-browser/chromium-browser.appdata.xml",
++      "//brave/chromium_src/chrome/installer/linux/common/brave-browser/chromium-browser.info",
+     ]
+   }
+ 
+@@ -355,6 +360,12 @@ group("installer_deps") {
+     "//chrome/browser/resources/media/mei_preload:component",
+     "//sandbox/linux:chrome_sandbox",
+   ]
++  if (brave_chromium_build) {
++    public_deps += [
++      "//brave/build/linux:copy_exe",
++      "//brave/build/linux:copy_sandbox",
++    ]
++  }
+   if (enable_nacl) {
+     public_deps += [
+       "//components/nacl/loader:nacl_helper",
+@@ -380,6 +391,9 @@ group("installer_deps") {
+ template("linux_package") {
+   assert(defined(invoker.channel))
+   channel = invoker.channel
++  if (channel == "unstable" ) {
++    channel = "dev"
++  }
+ 
+   if (current_cpu == "x86") {
+     # The shell scripts use "ia32" instead of "x86".
+@@ -522,3 +536,6 @@ linux_package("beta") {
+ linux_package("unstable") {
+   channel = "unstable"
+ }
++linux_package("nightly") {
++  channel = "nightly"
++}

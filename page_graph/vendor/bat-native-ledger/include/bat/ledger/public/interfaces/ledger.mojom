@@ -1,0 +1,225 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this file,
+// You can obtain one at http://mozilla.org/MPL/2.0/.
+module ledger.mojom;
+
+struct ContributionInfo {
+  string publisher;  // Filled only for recurrent tips
+  double value;
+  uint64 date;
+};
+
+struct PublisherInfo {
+  string id;
+  uint64 duration;
+  double score;
+  uint32 visits;
+  uint32 percent;
+  double weight;
+  int32 excluded;
+  int32 category;
+  uint64 reconcile_stamp;
+  bool verified;
+  string name;
+  string url;
+  string provider;
+  string favicon_url;
+
+  array<ContributionInfo> contributions;
+};
+
+struct PublisherBanner {
+  string publisher_key;
+  string title;
+  string name;
+  string description;
+  string background;
+  string logo;
+  array<int32> amounts;
+  string provider;
+  map<string, string> social;
+  bool verified;
+};
+
+struct PendingContribution {
+  string publisher_key;
+  double amount;
+  uint64 added_date;
+  string viewing_id;
+  int32 category;
+};
+
+struct PendingContributionInfo {
+  string publisher_key;
+  int32 category;
+  bool verified;
+  string name;
+  string url;
+  string provider;
+  string favicon_url;
+  double amount;
+  uint64 added_date;
+  string viewing_id;
+  uint64 expiration_date;
+};
+
+struct VisitData {
+  string tld;
+  string domain;
+  string path;
+  uint32 tab_id;
+  string name;
+  string url;
+  string provider;
+  string favicon_url;
+};
+
+struct Grant {
+  string altcurrency;
+  string probi;
+  string promotion_id;
+  uint64 expiry_time;
+  string type;
+};
+
+struct WalletProperties {
+  double fee_amount;
+  array<double> parameters_choices;
+  array<double> parameters_range;
+  uint32 parameters_days;
+  array<Grant> grants;
+};
+
+struct Balance {
+  double total;
+  string user_funds;
+  map<string, double> rates;
+  map<string, double> wallets;
+};
+
+struct AutoContributeProps {
+  bool enabled_contribute;
+  uint64 contribution_min_time;
+  int32 contribution_min_visits;
+  bool contribution_non_verified;
+  bool contribution_videos;
+  uint64 reconcile_stamp;
+};
+
+struct MediaEventInfo {
+  string event;
+  string time;
+  string status;
+};
+
+struct ExternalWallet {
+  string token;
+  string address;
+  uint32 status;
+  string verify_url;
+  string add_url;
+  string withdraw_url;
+  string one_time_string;
+  string user_name;
+  string account_url;
+  bool transferred;
+};
+
+struct BalanceReportInfo {
+  string opening_balance;
+  string closing_balance;
+  string deposits;
+  string grants;
+  string earning_from_ads;
+  string auto_contribute;
+  string recurring_donation;
+  string one_time_donation;
+  string total;
+};
+
+enum ExcludeFilter {
+  FILTER_ALL = -1,
+  FILTER_DEFAULT = 0,
+  FILTER_EXCLUDED = 1,
+  FILTER_INCLUDED = 2,
+  FILTER_ALL_EXCEPT_EXCLUDED = 3
+};
+
+struct ActivityInfoFilterOrderPair {
+  string property_name;
+  bool ascending;
+};
+
+struct ActivityInfoFilter {
+  string id;
+  ExcludeFilter excluded = ExcludeFilter.FILTER_DEFAULT;
+  uint32 percent = 0;
+  array<ActivityInfoFilterOrderPair> order_by;
+  uint64 min_duration = 0;
+  uint64 reconcile_stamp = 0;
+  bool non_verified = true;
+  uint32 min_visits = 0;
+};
+
+enum ContributionRetry {
+  STEP_NO = 0,
+  STEP_RECONCILE = 1,  // Phase 1
+  STEP_CURRENT = 2,    // Phase 1
+  STEP_PAYLOAD = 3,    // Phase 1
+  STEP_REGISTER = 4,   // Phase 1
+  STEP_VIEWING = 5,    // Phase 1
+  STEP_WINNERS = 6,    // Phase 1
+  STEP_PREPARE = 7,    // Phase 2
+  STEP_PROOF = 8,      // Phase 2
+  STEP_VOTE = 9,       // Phase 2
+  STEP_FINAL = 10      // Phase 2
+};
+
+struct ReconcileInfo {
+  string viewing_id;
+  string amount;
+  ContributionRetry retry_step;
+  int32 retry_level;
+};
+
+struct RewardsInternalsInfo {
+  string payment_id;
+  bool is_key_info_seed_valid;
+  string persona_id;
+  string user_id;
+  uint64 boot_stamp;
+
+  map<string, ReconcileInfo> current_reconciles;
+};
+
+enum Result {
+  LEDGER_OK = 0,
+  LEDGER_ERROR = 1,
+  NO_PUBLISHER_STATE = 2,
+  NO_LEDGER_STATE = 3,
+  INVALID_PUBLISHER_STATE = 4,
+  INVALID_LEDGER_STATE = 5,
+  CAPTCHA_FAILED = 6,
+  NO_PUBLISHER_LIST = 7,
+
+  TOO_MANY_RESULTS = 8,
+  NOT_FOUND = 9,
+
+  REGISTRATION_VERIFICATION_FAILED = 10,
+  BAD_REGISTRATION_RESPONSE = 11,
+  WALLET_CREATED = 12,
+  GRANT_NOT_FOUND = 13,
+
+  AC_TABLE_EMPTY = 14,
+  NOT_ENOUGH_FUNDS = 15,
+  TIP_ERROR = 16,
+  CORRUPTED_WALLET = 17,
+  GRANT_ALREADY_CLAIMED = 18,
+
+  CONTRIBUTION_AMOUNT_TOO_LOW = 19,
+  VERIFIED_PUBLISHER = 20,
+  PENDING_PUBLISHER_REMOVED = 21,
+  PENDING_NOT_ENOUGH_FUNDS = 22,
+  RECURRING_TABLE_EMPTY = 23,
+  EXPIRED_TOKEN = 24,
+};

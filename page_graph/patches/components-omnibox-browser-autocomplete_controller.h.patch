@@ -1,0 +1,12 @@
+diff --git a/components/omnibox/browser/autocomplete_controller.h b/components/omnibox/browser/autocomplete_controller.h
+index bd0192d7d1f0e0146d9c5de13aa27b5fbb27fe64..657553d8ce7ea08d14a3cf73fb0b741132bd348c 100644
+--- a/components/omnibox/browser/autocomplete_controller.h
++++ b/components/omnibox/browser/autocomplete_controller.h
+@@ -143,6 +143,7 @@ class AutocompleteController : public AutocompleteProviderListener,
+   }
+ 
+  private:
++  friend class BraveAutocompleteController;
+   friend class AutocompleteProviderTest;
+   FRIEND_TEST_ALL_PREFIXES(AutocompleteProviderTest,
+                            RedundantKeywordsIgnoredInResult);

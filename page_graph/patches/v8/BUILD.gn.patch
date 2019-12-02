@@ -1,0 +1,40 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index 8640517ae5c23d3ca162bde999f76c25dfab5a00..881a364c193c4f9577854c9bb17b5ca807664891 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -652,12 +652,10 @@ config("toolchain") {
+   }
+ 
+   if (is_clang) {
+-    cflags += [ "-Wmissing-field-initializers" ]
+-
+-    if (v8_current_cpu != "mips" && v8_current_cpu != "mipsel") {
+-      # We exclude MIPS because the IsMipsArchVariant macro causes trouble.
+-      cflags += [ "-Wunreachable-code" ]
+-    }
++    cflags += [
++      "-Wmissing-field-initializers",
++      "-Wno-tautological-compare",
++    ]
+ 
+     if (v8_current_cpu == "x64" || v8_current_cpu == "arm64" ||
+         v8_current_cpu == "mips64el") {
+@@ -1942,6 +1940,10 @@ v8_source_set("v8_compiler_opt") {
+ 
+   sources = v8_compiler_sources
+ 
++  deps = [
++    "//brave/third_party/blink/brave_page_graph",
++  ]
++
+   public_deps = [
+     ":generate_bytecode_builtins_list",
+     ":run_torque",
+@@ -3253,6 +3255,7 @@ v8_source_set("v8_base_without_compiler") {
+     ":v8_shared_internal_headers",
+     ":v8_version",
+     "src/inspector:inspector",
++    "//brave/third_party/blink/brave_page_graph",
+   ]
+ 
+   public_deps = [

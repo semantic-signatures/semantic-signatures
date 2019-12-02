@@ -1,0 +1,22 @@
+diff --git a/third_party/blink/renderer/core/svg/svg_text_content_element.cc b/third_party/blink/renderer/core/svg/svg_text_content_element.cc
+index 07ecdaff02c1b50b9c22fb98f21a7cf040009278..5e2c60b45b4bc38f56e0e79800bcb0b9916efb82 100644
+--- a/third_party/blink/renderer/core/svg/svg_text_content_element.cc
++++ b/third_party/blink/renderer/core/svg/svg_text_content_element.cc
+@@ -20,6 +20,7 @@
+ 
+ #include "third_party/blink/renderer/core/svg/svg_text_content_element.h"
+ 
++#include "brave/renderer/brave_content_settings_observer_helper.h"
+ #include "third_party/blink/renderer/core/css/css_property_names.h"
+ #include "third_party/blink/renderer/core/css_value_keywords.h"
+ #include "third_party/blink/renderer/core/editing/frame_selection.h"
+@@ -97,6 +98,9 @@ unsigned SVGTextContentElement::getNumberOfChars() {
+ }
+ 
+ float SVGTextContentElement::getComputedTextLength() {
++  if (!AllowFingerprinting(GetDocument().GetFrame())) {
++    return 0.0f;
++  }
+   GetDocument().UpdateStyleAndLayoutForNode(this);
+   return SVGTextQuery(GetLayoutObject()).TextLength();
+ }

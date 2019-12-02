@@ -1,0 +1,58 @@
+diff --git a/chrome/browser/ui/webui/settings/settings_import_data_handler.cc b/chrome/browser/ui/webui/settings/settings_import_data_handler.cc
+index f546887fdfcd5907b99ed0d04822ecb28de5b69e..ae65da03e1d667e398eb29be9e4cee0cc4ee205c 100644
+--- a/chrome/browser/ui/webui/settings/settings_import_data_handler.cc
++++ b/chrome/browser/ui/webui/settings/settings_import_data_handler.cc
+@@ -18,6 +18,8 @@
+ #include "base/strings/utf_string_conversions.h"
+ #include "base/threading/thread_restrictions.h"
+ #include "base/values.h"
++#include "brave/browser/importer/brave_external_process_importer_host.h"
++#include "brave/browser/importer/brave_profile_writer.h"
+ #include "chrome/browser/browser_process.h"
+ #include "chrome/browser/importer/external_process_importer_host.h"
+ #include "chrome/browser/importer/importer_list.h"
+@@ -96,12 +98,12 @@ void ImportDataHandler::StartImport(
+                     base::Value(kImportStatusInProgress));
+   import_did_succeed_ = false;
+ 
+-  importer_host_ = new ExternalProcessImporterHost();
++  importer_host_ = new BraveExternalProcessImporterHost();
+   importer_host_->set_observer(this);
+   Profile* profile = Profile::FromWebUI(web_ui());
+   importer_host_->StartImportSettings(source_profile, profile,
+                                       imported_items,
+-                                      new ProfileWriter(profile));
++                                      new BraveProfileWriter(profile));
+ 
+   importer::LogImporterUseToMetrics("ImportDataHandler",
+                                     source_profile.importer_type);
+@@ -126,6 +128,14 @@ void ImportDataHandler::ImportData(const base::ListValue* args) {
+     selected_items |= importer::PASSWORDS;
+   if (prefs->GetBoolean(prefs::kImportDialogSearchEngine))
+     selected_items |= importer::SEARCH_ENGINES;
++  if (prefs->GetBoolean(prefs::kImportDialogCookies))
++    selected_items |= importer::COOKIES;
++  if (prefs->GetBoolean(prefs::kImportDialogStats))
++    selected_items |= importer::STATS;
++  if (prefs->GetBoolean(prefs::kImportDialogLedger))
++    selected_items |= importer::LEDGER;
++  if (prefs->GetBoolean(prefs::kImportDialogWindows))
++    selected_items |= importer::WINDOWS;
+ 
+   const importer::SourceProfile& source_profile =
+       importer_list_->GetSourceProfileAt(browser_index);
+@@ -179,6 +189,14 @@ void ImportDataHandler::SendBrowserProfileData(const std::string& callback_id) {
+     browser_profile->SetBoolean(
+         "autofillFormData",
+         (browser_services & importer::AUTOFILL_FORM_DATA) != 0);
++    browser_profile->SetBoolean("cookies",
++        (browser_services & importer::COOKIES) != 0);
++    browser_profile->SetBoolean("stats",
++        (browser_services & importer::STATS) != 0);
++    browser_profile->SetBoolean("ledger",
++        (browser_services & importer::LEDGER) != 0);
++    browser_profile->SetBoolean("windows",
++        (browser_services & importer::WINDOWS) != 0);
+ 
+     browser_profiles.Append(std::move(browser_profile));
+   }

@@ -1,0 +1,23 @@
+diff --git a/chrome/browser/permissions/permission_uma_util.cc b/chrome/browser/permissions/permission_uma_util.cc
+index 97ae8e1ee0339d5714d3baef177a1e27ce219583..431c5256251904e83ed7c7a7245a39b4eef4f1db 100644
+--- a/chrome/browser/permissions/permission_uma_util.cc
++++ b/chrome/browser/permissions/permission_uma_util.cc
+@@ -65,7 +65,7 @@ namespace {
+ 
+ const int kPriorCountCap = 10;
+ 
+-std::string GetPermissionRequestString(PermissionRequestType type) {
++std::string GetPermissionRequestString_ChromiumImpl(PermissionRequestType type) {
+   switch (type) {
+     case PermissionRequestType::MULTIPLE:
+       return "AudioAndVideoCapture";
+@@ -426,6 +426,9 @@ void PermissionUmaUtil::RecordPermissionAction(
+       UMA_HISTOGRAM_ENUMERATION("Permissions.Action.PaymentHandler", action,
+                                 PermissionAction::NUM);
+       break;
++    case CONTENT_SETTINGS_TYPE_AUTOPLAY:
++      BraveRecordPermissionAction(permission, secure_origin, action);
++      break;
+     // The user is not prompted for these permissions, thus there is no
+     // permission action recorded for them.
+     default:

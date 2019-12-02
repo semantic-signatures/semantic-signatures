@@ -1,0 +1,20 @@
+source_set("profiles") {
+  sources = [
+    "brave_profile_manager.cc",
+    "brave_profile_manager.h",
+    "profile_util.cc",
+    "profile_util.h",
+  ]
+  deps = [
+    "//base",
+    "//chrome/common",
+    "//content/public/common",
+    "//brave/browser/tor",
+    "//brave/content:browser",
+    "//brave/common/tor",
+    "//brave/components/brave_ads/browser",
+    "//brave/components/brave_sync",
+    "//brave/components/brave_rewards/browser",
+    "//ui/base",
+  ]
+}

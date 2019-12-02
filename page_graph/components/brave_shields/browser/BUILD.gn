@@ -1,0 +1,91 @@
+import("//brave/components/brave_shields/browser/buildflags/buildflags.gni")
+import("//extensions/buildflags/buildflags.gni")
+import("//brave/vendor/adblock_rust_ffi/config.gni")
+
+source_set("browser") {
+  public_deps = [
+    "buildflags",
+    ":adblock_libs"
+  ]
+
+  sources = [
+    "ad_block_base_service.cc",
+    "ad_block_base_service.h",
+    "ad_block_custom_filters_service.cc",
+    "ad_block_custom_filters_service.h",
+    "ad_block_regional_service.cc",
+    "ad_block_regional_service.h",
+    "ad_block_regional_service_manager.cc",
+    "ad_block_regional_service_manager.h",
+    "ad_block_service.cc",
+    "ad_block_service.h",
+    "ad_block_service_helper.cc",
+    "ad_block_service_helper.h",
+    "adblock_interceptor.cc",
+    "adblock_interceptor.h",
+    "autoplay_whitelist_service.cc",
+    "autoplay_whitelist_service.h",
+    "base_brave_shields_service.cc",
+    "base_brave_shields_service.h",
+    "brave_shields_util.cc",
+    "brave_shields_util.h",
+    "brave_shields_web_contents_observer.cc",
+    "brave_shields_web_contents_observer.h",
+    "https_everywhere_recently_used_cache.h",
+    "https_everywhere_service.cc",
+    "https_everywhere_service.h",
+    "referrer_whitelist_service.cc",
+    "referrer_whitelist_service.h",
+    "tracking_protection_service.cc",
+    "tracking_protection_service.h",
+  ]
+
+  if (brave_stp_enabled) {
+    sources += [
+      "tracking_protection_helper.cc",
+      "tracking_protection_helper.h",
+    ]
+  }
+
+  deps = [
+    "//brave/components/brave_component_updater/browser",
+    "//brave/components/brave_shields/common",
+    "//brave/components/content_settings/core/browser",
+    "//brave/content:common",
+    "//brave/third_party/blink/brave_page_graph",
+    "//brave/vendor/adblock_rust_ffi:adblock_ffi",
+    "//brave/vendor/autoplay-whitelist/brave:autoplay-whitelist",
+    "//chrome/common",
+    "//components/prefs",
+    "//content/public/browser",
+    "//net",
+    "//third_party/leveldatabase",
+  ]
+
+  if (enable_extensions) {
+    sources += [
+      "extension_whitelist_service.cc",
+      "extension_whitelist_service.h",
+    ]
+
+    deps += [
+      "//brave/vendor/extension-whitelist/brave:extension-whitelist",
+    ]
+  }
+}
+
+if (is_mac) {
+  bundle_data("adblock_libs") {
+    sources = [
+      adblock_lib_path,
+    ]
+    outputs = [
+      "{{bundle_contents_dir}}/Libraries/{{source_file_part}}",
+    ]
+    public_deps = [
+      "//brave/vendor/adblock_rust_ffi:adblock",
+    ]
+  }
+} else {
+  group("adblock_libs") {}
+}

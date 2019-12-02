@@ -1,0 +1,49 @@
+diff --git a/third_party/blink/renderer/core/dom/document.h b/third_party/blink/renderer/core/dom/document.h
+index 46208455b19db9656a10e2969d3bbaad03958cba..f29b83cc5adcc8ced7d5e67d5fcfedb12a7b9948 100644
+--- a/third_party/blink/renderer/core/dom/document.h
++++ b/third_party/blink/renderer/core/dom/document.h
+@@ -78,6 +78,11 @@
+ #include "third_party/blink/renderer/platform/wtf/casting.h"
+ #include "third_party/blink/renderer/platform/wtf/hash_set.h"
+ 
++#include "brave/third_party/blink/brave_page_graph/buildflags/buildflags.h"
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++#include "brave/third_party/blink/brave_page_graph/page_graph.h"
++#endif
++
+ namespace base {
+ class SingleThreadTaskRunner;
+ }
+@@ -1272,7 +1277,7 @@ class CORE_EXPORT Document : public ContainerNode,
+   // EnsureTemplateDocument().
+   bool IsTemplateDocument() const { return !!template_document_host_; }
+   Document& EnsureTemplateDocument();
+-  Document* TemplateDocumentHost() { return template_document_host_; }
++  Document* TemplateDocumentHost() const { return template_document_host_; }
+ 
+   // TODO(thestig): Rename these and related functions, since we can call them
+   // for controls outside of forms as well.
+@@ -1585,6 +1590,10 @@ class CORE_EXPORT Document : public ContainerNode,
+                     UseCounterHelper::CSSPropertyType) const;
+   void ClearUseCounterForTesting(mojom::WebFeature);
+ 
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++  brave_page_graph::PageGraph* GetPageGraph();
++#endif
++
+  protected:
+   void DidUpdateSecurityOrigin() final;
+ 
+@@ -1597,6 +1606,12 @@ class CORE_EXPORT Document : public ContainerNode,
+     return parser_sync_policy_;
+   }
+ 
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++  brave_page_graph::PageGraph* page_graph_;
++  brave_page_graph::PageGraph* page_graph_non_owning_;
++  bool registered_remote_frame_creation_;
++#endif
++
+  private:
+   friend class IgnoreDestructiveWriteCountIncrementer;
+   friend class ThrowOnDynamicMarkupInsertionCountIncrementer;

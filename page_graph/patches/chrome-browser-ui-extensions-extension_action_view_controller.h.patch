@@ -1,0 +1,44 @@
+diff --git a/chrome/browser/ui/extensions/extension_action_view_controller.h b/chrome/browser/ui/extensions/extension_action_view_controller.h
+index be1b8e36e4a28202fed694bfec57a1c296e4ef32..e0e683aa85163eddc9905fa2406ce65673046134 100644
+--- a/chrome/browser/ui/extensions/extension_action_view_controller.h
++++ b/chrome/browser/ui/extensions/extension_action_view_controller.h
+@@ -14,6 +14,7 @@
+ #include "extensions/browser/extension_host_observer.h"
+ #include "ui/gfx/image/image.h"
+ 
++class BraveActionViewController;
+ class Browser;
+ class ExtensionAction;
+ class ExtensionActionPlatformDelegate;
+@@ -39,6 +40,7 @@ class ExtensionActionViewController
+       public extensions::ExtensionContextMenuModel::PopupDelegate,
+       public extensions::ExtensionHostObserver {
+  public:
++  friend class BraveActionViewController;
+   // The different options for showing a popup.
+   enum PopupShowAction { SHOW_POPUP, SHOW_POPUP_AND_INSPECT };
+ 
+@@ -106,6 +108,7 @@ class ExtensionActionViewController
+   // In some cases (such as when an action is shown in a menu), a substitute
+   // ToolbarActionViewController should be used for showing popups. This
+   // returns the preferred controller.
++  virtual
+   ExtensionActionViewController* GetPreferredPopupViewController();
+ 
+   // Executes the extension action with |show_action|. If
+@@ -121,6 +124,7 @@ class ExtensionActionViewController
+   // The popup may not be shown synchronously if the extension is hidden and
+   // first needs to slide itself out.
+   // Returns true if a popup will be shown.
++  virtual
+   bool TriggerPopupWithUrl(PopupShowAction show_action,
+                            const GURL& popup_url,
+                            bool grant_tab_permissions);
+@@ -131,6 +135,7 @@ class ExtensionActionViewController
+                  PopupShowAction show_action);
+ 
+   // Handles cleanup after the popup closes.
++  virtual
+   void OnPopupClosed();
+ 
+   // Returns the image source for the icon.

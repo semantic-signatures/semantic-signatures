@@ -1,0 +1,23 @@
+diff --git a/content/browser/browser_main_runner_impl.cc b/content/browser/browser_main_runner_impl.cc
+index ec00bd53ac2dd7d3e3f59aacb140c4f752393241..8443501f1d82b55dedc517b0dc1ec3e7031a437b 100644
+--- a/content/browser/browser_main_runner_impl.cc
++++ b/content/browser/browser_main_runner_impl.cc
+@@ -17,6 +17,7 @@
+ #include "base/time/time.h"
+ #include "base/trace_event/heap_profiler_allocation_context_tracker.h"
+ #include "base/trace_event/trace_event.h"
++#include "brave/browser/brave_browser_main_loop.h"
+ #include "build/build_config.h"
+ #include "components/tracing/common/trace_startup_config.h"
+ #include "components/tracing/common/tracing_switches.h"
+@@ -94,8 +95,8 @@ int BrowserMainRunnerImpl::Initialize(const MainFunctionParams& parameters) {
+     gfx::win::InitializeDirectWrite();
+ #endif  // OS_WIN
+ 
+-    main_loop_.reset(
+-        new BrowserMainLoop(parameters, std::move(scoped_execution_fence_)));
++    main_loop_.reset(new brave::BraveBrowserMainLoop(
++        parameters, std::move(scoped_execution_fence_)));
+ 
+     main_loop_->Init();
+ 

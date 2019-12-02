@@ -1,0 +1,30 @@
+diff --git a/chrome/app/BUILD.gn b/chrome/app/BUILD.gn
+index 590c4edcededad77172ae30e85b388b91d305b8e..ff494f3afd3dfaed475c89313116a45f64ffb565 100644
+--- a/chrome/app/BUILD.gn
++++ b/chrome/app/BUILD.gn
+@@ -186,6 +186,8 @@ grit("generated_resources") {
+   if (is_android) {
+     outputs += android_generated_java_resources
+   }
++
++  deps = [ "//brave/app:brave_generated_resources_grit" ]
+ }
+ 
+ if (is_android) {
+@@ -263,7 +265,7 @@ grit("google_chrome_strings") {
+ }
+ 
+ grit("chromium_strings") {
+-  source = "chromium_strings.grd"
++  source = "${branding_path_component}_strings.grd"
+   defines = chrome_grit_defines
+   output_dir = "$root_gen_dir/chrome"
+   outputs = [
+@@ -348,6 +350,7 @@ static_library("test_support") {
+     "//components/nacl/common:buildflags",
+     "//components/startup_metric_utils/browser:lib",
+     "//components/tracing",
++    "//components/unified_consent",
+     "//content/public/app:both",
+     "//content/public/common",
+     "//content/public/common:service_names",

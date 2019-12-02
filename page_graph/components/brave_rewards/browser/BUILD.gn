@@ -1,0 +1,129 @@
+import("//brave/components/brave_rewards/browser/buildflags/buildflags.gni")
+import("//extensions/buildflags/buildflags.gni")
+
+source_set("browser") {
+  public_deps = [
+    "buildflags",
+  ]
+
+  sources = [
+    "switches.cc",
+    "switches.h",
+    "auto_contribution_props.cc",
+    "auto_contribution_props.h",
+    "balance_report.cc",
+    "balance_report.h",
+    "rewards_notification_service.cc",
+    "rewards_notification_service.h",
+    "rewards_notification_service_observer.h",
+    "content_site.cc",
+    "content_site.h",
+    "rewards_service.cc",
+    "rewards_service.h",
+    "rewards_service_factory.cc",
+    "rewards_service_factory.h",
+    "rewards_service_observer.h",
+    "wallet_properties.cc",
+    "wallet_properties.h",
+    "grant.cc",
+    "grant.h",
+    "pending_contribution.cc",
+    "pending_contribution.h",
+    "publisher_banner.cc",
+    "publisher_banner.h",
+    "contribution_info.cc",
+    "contribution_info.h",
+    "reconcile_info.cc",
+    "reconcile_info.h",
+    "recurring_donation.cc",
+    "recurring_donation.h",
+    "rewards_internals_info.cc",
+    "rewards_internals_info.h",
+    "balance.cc",
+    "balance.h",
+    "external_wallet.cc",
+    "external_wallet.h",
+    "rewards_protocol_handler.h",
+    "rewards_protocol_handler.cc",
+  ]
+
+  deps = [
+    "//base",
+    "//brave/components/brave_rewards/common",
+    "//components/keyed_service/content",
+    "//components/keyed_service/core",
+    "//components/sessions",
+    # for profile.h
+    "//components/domain_reliability",
+    "//content/public/browser",
+    "//content/public/common",
+    "//services/network/public/mojom",
+    "//third_party/leveldatabase",
+  ]
+
+  if (!is_android) {
+    # on android, one shot is part of base lib
+    deps += [
+      # for one shot event
+      "//extensions/common",
+    ]
+  }
+
+  if (brave_rewards_enabled) {
+    sources += [
+      "net/network_delegate_helper.cc",
+      "net/network_delegate_helper.h",
+      "rewards_service_impl.cc",
+      "rewards_service_impl.h",
+      "publisher_info_backend.cc",
+      "publisher_info_backend.h",
+      "publisher_info_database.cc",
+      "publisher_info_database.h",
+      "rewards_fetcher_service_observer.cc",
+      "rewards_fetcher_service_observer.h",
+      "rewards_notification_service_impl.cc",
+      "rewards_notification_service_impl.h",
+    ]
+
+    if (enable_extensions) {
+      sources += [
+        "extension_rewards_notification_service_observer.cc",
+        "extension_rewards_notification_service_observer.h",
+        "extension_rewards_service_observer.cc",
+        "extension_rewards_service_observer.h",
+      ]
+    }
+
+    deps += [
+      "//brave/vendor/bat-native-ledger",
+      "//brave/components/resources",
+      "//brave/components/services/bat_ledger/public/cpp",
+      "//mojo/public/cpp/bindings",
+      "//net",
+      "//services/network/public/cpp",
+      "//services/service_manager/public/cpp",
+      "//url",
+    ]
+  }
+}
+
+# TODO(bridiver) - fix tests on android
+if (!is_android) {
+source_set("testutil") {
+  testonly = true
+
+  deps = [
+    "//brave/vendor/bat-native-ledger",
+    ":browser",
+    "//base",
+    "//content/public/browser",
+    "//chrome/test:test_support",
+    "//testing/gtest",
+  ]
+
+  sources = [
+    "test_util.cc",
+    "test_util.h",
+  ]
+}
+}

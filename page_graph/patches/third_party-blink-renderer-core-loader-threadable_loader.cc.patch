@@ -1,0 +1,57 @@
+diff --git a/third_party/blink/renderer/core/loader/threadable_loader.cc b/third_party/blink/renderer/core/loader/threadable_loader.cc
+index 24596cc77563fa369224e51e95b92c87f5762519..fd8322e47ac56a65b2ee4d4da49626bccfe53c43 100644
+--- a/third_party/blink/renderer/core/loader/threadable_loader.cc
++++ b/third_party/blink/renderer/core/loader/threadable_loader.cc
+@@ -73,6 +73,8 @@
+ #include "third_party/blink/renderer/platform/weborigin/security_policy.h"
+ #include "third_party/blink/renderer/platform/wtf/assertions.h"
+ 
++#include "brave/third_party/blink/brave_page_graph/buildflags/buildflags.h"
++
+ namespace blink {
+ 
+ namespace {
+@@ -1059,6 +1061,18 @@ void ThreadableLoader::LoadRequest(
+   if (request.GetRequestContext() == mojom::RequestContextType::VIDEO ||
+       request.GetRequestContext() == mojom::RequestContextType::AUDIO) {
+     DCHECK(async_);
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++    raw_resource_ = RawResource::FetchMedia(new_params, resource_fetcher_, this);
++  } else if (request.GetRequestContext() ==
++             mojom::RequestContextType::MANIFEST) {
++    DCHECK(async_);
++    raw_resource_ = RawResource::FetchManifest(new_params, resource_fetcher_, this);
++  } else if (async_) {
++    raw_resource_ = RawResource::Fetch(new_params, resource_fetcher_, this);
++  } else {
++    raw_resource_ = RawResource::FetchSynchronously(new_params, resource_fetcher_, this);
++  }
++#else
+     RawResource::FetchMedia(new_params, resource_fetcher_, this);
+   } else if (request.GetRequestContext() ==
+              mojom::RequestContextType::MANIFEST) {
+@@ -1069,6 +1083,7 @@ void ThreadableLoader::LoadRequest(
+   } else {
+     RawResource::FetchSynchronously(new_params, resource_fetcher_, this);
+   }
++#endif
+ }
+ 
+ const SecurityOrigin* ThreadableLoader::GetSecurityOrigin() const {
+@@ -1083,10 +1098,16 @@ Document* ThreadableLoader::GetDocument() const {
+ }
+ 
+ void ThreadableLoader::Trace(blink::Visitor* visitor) {
++  visitor->Trace(raw_resource_);
+   visitor->Trace(execution_context_);
+   visitor->Trace(client_);
+   visitor->Trace(resource_fetcher_);
+   RawResourceClient::Trace(visitor);
+ }
+ 
++#if BUILDFLAG(BRAVE_PAGE_GRAPH_ENABLED)
++RawResource* ThreadableLoader::GetRawResource() const {
++  return raw_resource_;
++}
++#endif
+ }  // namespace blink

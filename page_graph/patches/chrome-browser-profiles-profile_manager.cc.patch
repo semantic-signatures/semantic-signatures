@@ -1,0 +1,40 @@
+diff --git a/chrome/browser/profiles/profile_manager.cc b/chrome/browser/profiles/profile_manager.cc
+index 4cce9ca9fbf1ded2c4b8334f8ff9be0d43e97803..7b39473be45be8530eb91c1389c96aa65625a7d1 100644
+--- a/chrome/browser/profiles/profile_manager.cc
++++ b/chrome/browser/profiles/profile_manager.cc
+@@ -1503,9 +1503,11 @@ void ProfileManager::EnsureActiveProfileExistsBeforeDeletion(
+   const base::FilePath last_used_profile_path =
+       GetLastUsedProfileDir(user_data_dir_);
+   const base::FilePath guest_profile_path = GetGuestProfilePath();
++  const base::FilePath tor_profile_path = BraveProfileManager::GetTorProfilePath();
+   Profile* last_used_profile = GetProfileByPath(last_used_profile_path);
+   if (last_used_profile_path != profile_dir &&
+       last_used_profile_path != guest_profile_path &&
++      last_used_profile_path != tor_profile_path &&
+       last_used_profile != nullptr &&
+       !last_used_profile->IsLegacySupervised()) {
+     FinishDeletingProfile(profile_dir, last_used_profile_path);
+@@ -1518,6 +1520,7 @@ void ProfileManager::EnsureActiveProfileExistsBeforeDeletion(
+     base::FilePath cur_path = profile->GetPath();
+     if (cur_path != profile_dir &&
+         cur_path != guest_profile_path &&
++        cur_path != tor_profile_path &&
+         !profile->IsLegacySupervised() &&
+         !IsProfileDirectoryMarkedForDeletion(cur_path)) {
+       OnNewActiveProfileLoaded(profile_dir, cur_path, std::move(callback),
+@@ -1537,6 +1540,7 @@ void ProfileManager::EnsureActiveProfileExistsBeforeDeletion(
+     // legacy-supervised.
+     if (cur_path != profile_dir &&
+         cur_path != guest_profile_path &&
++        cur_path != tor_profile_path &&
+         !entry->IsLegacySupervised() &&
+         !IsProfileDirectoryMarkedForDeletion(cur_path)) {
+       fallback_profile_path = cur_path;
+@@ -1894,6 +1898,7 @@ void ProfileManager::ScheduleForcedEphemeralProfileForDeletion(
+     base::FilePath entry_path = entry->GetPath();
+     if (entry_path == profile_dir ||
+         entry_path == GetGuestProfilePath() ||
++        entry_path == BraveProfileManager::GetTorProfilePath() ||
+         entry->IsLegacySupervised() ||
+         IsProfileDirectoryMarkedForDeletion(entry_path))
+       continue;

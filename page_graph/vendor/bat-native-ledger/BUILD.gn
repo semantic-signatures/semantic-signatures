@@ -1,0 +1,173 @@
+# Copyright (c) 2019 The Brave Authors. All rights reserved.
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+import("//brave/components/brave_ads/browser/buildflags/buildflags.gni")
+
+if (is_android) {
+  import("//build/config/android/rules.gni")
+}
+
+dep_base = rebase_path("../..", "//")
+
+config("external_config") {
+  visibility = [ ":*" ]
+  include_dirs = [
+    "include",
+    "$target_gen_dir/include",
+  ]
+}
+
+config("internal_config") {
+  visibility = [
+    ":*",
+    "//brave/test:*",
+  ]
+  include_dirs = [ "src" ]
+}
+
+group("bat-native-ledger") {
+  public_deps = [
+    ":ledger",
+  ]
+
+  data_deps = [
+    ":bat-native-ledger-standalone",
+  ]
+}
+
+static_library("bat-native-ledger-standalone") {
+  # TODO(bridiver) - only export symbols from `include`
+  complete_static_lib = true
+
+  output_dir = root_out_dir
+
+  configs -= [ "//build/config/compiler:thin_archive" ]
+
+  defines = [
+    "STANDALONE_BUILD",
+  ]
+
+  deps = [
+    ":ledger"
+  ]
+}
+
+source_set("headers") {
+  visibility = [
+    ":*",
+    rebase_path("bat-native-confirmations", dep_base),
+    # add this only when ads is in the same process
+    # rebase_path("bat-native-ads", dep_base),
+  ]
+
+  public_configs = [ ":external_config" ]
+
+  sources = [
+    "include/bat/ledger/auto_contribute_props.h",
+    "include/bat/ledger/balance.h",
+    "include/bat/ledger/balance_report_info.h",
+    "include/bat/ledger/export.h",
+    "include/bat/ledger/grant.h",
+    "include/bat/ledger/ledger.h",
+    "include/bat/ledger/ledger_callback_handler.h",
+    "include/bat/ledger/ledger_client.h",
+    "include/bat/ledger/media_event_info.h",
+    "include/bat/ledger/pending_contribution.h",
+    "include/bat/ledger/publisher_info.h",
+    "include/bat/ledger/reconcile_info.h",
+    "include/bat/ledger/transaction_info.h",
+    "include/bat/ledger/transactions_info.h",
+    "include/bat/ledger/wallet_properties.h",
+  ]
+
+  public_deps = [
+    "include/bat/ledger/public/interfaces"
+  ]
+}
+
+source_set("ledger") {
+  configs += [ ":internal_config" ]
+
+  output_name = "bat_native_ledger"
+
+  sources = [
+    "src/bat/ledger/internal/bat_helper.cc",
+    "src/bat/ledger/internal/bat_helper.h",
+    "src/bat/ledger/internal/bat_publishers.cc",
+    "src/bat/ledger/internal/bat_publishers.h",
+    "src/bat/ledger/internal/bat_state.cc",
+    "src/bat/ledger/internal/bat_state.h",
+    "src/bat/ledger/internal/bignum.cc",
+    "src/bat/ledger/internal/bignum.h",
+    "src/bat/ledger/internal/grants.cc",
+    "src/bat/ledger/internal/grants.h",
+    "src/bat/ledger/internal/contribution/contribution.cc",
+    "src/bat/ledger/internal/contribution/contribution.h",
+    "src/bat/ledger/internal/contribution/phase_one.cc",
+    "src/bat/ledger/internal/contribution/phase_one.h",
+    "src/bat/ledger/internal/contribution/phase_two.cc",
+    "src/bat/ledger/internal/contribution/phase_two.h",
+    "src/bat/ledger/internal/contribution/unverified.cc",
+    "src/bat/ledger/internal/contribution/unverified.h",
+    "src/bat/ledger/internal/ledger_impl.cc",
+    "src/bat/ledger/internal/ledger_impl.h",
+    "src/bat/ledger/internal/media/helper.h",
+    "src/bat/ledger/internal/media/helper.cc",
+    "src/bat/ledger/internal/media/media.cc",
+    "src/bat/ledger/internal/media/media.h",
+    "src/bat/ledger/internal/media/reddit.h",
+    "src/bat/ledger/internal/media/reddit.cc",
+    "src/bat/ledger/internal/media/twitch.h",
+    "src/bat/ledger/internal/media/twitch.cc",
+    "src/bat/ledger/internal/media/twitter.h",
+    "src/bat/ledger/internal/media/twitter.cc",
+    "src/bat/ledger/internal/media/vimeo.h",
+    "src/bat/ledger/internal/media/vimeo.cc",
+    "src/bat/ledger/internal/media/youtube.h",
+    "src/bat/ledger/internal/media/youtube.cc",
+    "src/bat/ledger/internal/uphold/uphold.h",
+    "src/bat/ledger/internal/uphold/uphold.cc",
+    "src/bat/ledger/internal/uphold/uphold_card.h",
+    "src/bat/ledger/internal/uphold/uphold_card.cc",
+    "src/bat/ledger/internal/uphold/uphold_transfer.h",
+    "src/bat/ledger/internal/uphold/uphold_transfer.cc",
+    "src/bat/ledger/internal/uphold/uphold_util.h",
+    "src/bat/ledger/internal/uphold/uphold_util.cc",
+    "src/bat/ledger/internal/wallet/balance.h",
+    "src/bat/ledger/internal/wallet/balance.cc",
+    "src/bat/ledger/internal/wallet/create.h",
+    "src/bat/ledger/internal/wallet/create.cc",
+    "src/bat/ledger/internal/wallet/recover.h",
+    "src/bat/ledger/internal/wallet/recover.cc",
+    "src/bat/ledger/internal/wallet/wallet.h",
+    "src/bat/ledger/internal/wallet/wallet.cc",
+    "src/bat/ledger/internal/wallet/wallet_util.h",
+    "src/bat/ledger/internal/wallet/wallet_util.cc",
+    "src/bat/ledger/internal/media/github.h",
+    "src/bat/ledger/internal/media/github.cc",
+    "src/bat/ledger/ledger.cc",
+    "src/bat/ledger/transaction_info.cc",
+    "src/bat/ledger/transactions_info.cc",
+  ]
+
+  deps = [
+    "//base",
+    "//crypto",
+    "//third_party/boringssl",
+    "//third_party/re2",
+    "//url",
+    rebase_path("bat-native-ads", dep_base),
+    rebase_path("bat-native-confirmations", dep_base),
+    rebase_path("bat-native-anonize:anonize2", dep_base),
+    rebase_path("bip39wally-core-native:bip39wally-core", dep_base),
+    rebase_path("bat-native-tweetnacl:tweetnacl", dep_base),
+    rebase_path("bat-native-rapidjson", dep_base),
+    rebase_path("brave_base", dep_base),
+  ]
+
+  public_deps = [
+    ":headers",
+  ]
+}

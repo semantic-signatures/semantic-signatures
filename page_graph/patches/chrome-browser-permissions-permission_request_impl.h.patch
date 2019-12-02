@@ -1,0 +1,18 @@
+diff --git a/chrome/browser/permissions/permission_request_impl.h b/chrome/browser/permissions/permission_request_impl.h
+index 3524b3cadbf0e310ac3ba707d35d3ed782b83b34..f49e931202877fe2e33ba1a473b97b78865bbd4d 100644
+--- a/chrome/browser/permissions/permission_request_impl.h
++++ b/chrome/browser/permissions/permission_request_impl.h
+@@ -32,11 +32,13 @@ class PermissionRequestImpl : public PermissionRequest {
+  private:
+   // PermissionRequest:
+   IconId GetIconId() const override;
++  IconId GetIconId_ChromiumImpl() const;
+ #if defined(OS_ANDROID)
+   base::string16 GetTitleText() const override;
+   base::string16 GetMessageText() const override;
+ #endif
+   base::string16 GetMessageTextFragment() const override;
++  base::string16 GetMessageTextFragment_ChromiumImpl() const;
+   GURL GetOrigin() const override;
+   void PermissionGranted() override;
+   void PermissionDenied() override;

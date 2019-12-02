@@ -1,0 +1,30 @@
+diff --git a/chrome/browser/ui/page_info/page_info.cc b/chrome/browser/ui/page_info/page_info.cc
+index b6aee18892fbcc9fb13eab006c57cea8aec2a89d..51435b95a148b60cef341e41e7138b8f131c74ee 100644
+--- a/chrome/browser/ui/page_info/page_info.cc
++++ b/chrome/browser/ui/page_info/page_info.cc
+@@ -161,6 +161,7 @@ bool ShouldShowPermission(
+     HostContentSettingsMap* content_settings,
+     content::WebContents* web_contents,
+     TabSpecificContentSettings* tab_specific_content_settings) {
++  if (!BraveShouldShowPermission(info, web_contents)) return false;
+   // Note |CONTENT_SETTINGS_TYPE_ADS| will show up regardless of its default
+   // value when it has been activated on the current origin.
+   if (info.type == CONTENT_SETTINGS_TYPE_ADS) {
+@@ -198,7 +199,7 @@ bool ShouldShowPermission(
+   }
+ #endif
+ 
+-#if !defined(OS_ANDROID)
++#if !defined(OS_ANDROID) && !defined(BRAVE_CHROMIUM_BUILD)
+   // Autoplay is Android-only at the moment.
+   if (info.type == CONTENT_SETTINGS_TYPE_AUTOPLAY)
+     return false;
+@@ -1011,7 +1012,7 @@ void PageInfo::RecordPasswordReuseEvent() {
+ std::vector<ContentSettingsType> PageInfo::GetAllPermissionsForTesting() {
+   std::vector<ContentSettingsType> permission_list;
+   for (size_t i = 0; i < base::size(kPermissionType); ++i) {
+-#if !defined(OS_ANDROID)
++#if !defined(OS_ANDROID) && !defined(BRAVE_CHROMIUM_BUILD)
+     if (kPermissionType[i] == CONTENT_SETTINGS_TYPE_AUTOPLAY)
+       continue;
+ #endif

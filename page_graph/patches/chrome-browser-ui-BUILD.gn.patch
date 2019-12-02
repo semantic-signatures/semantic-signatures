@@ -1,0 +1,32 @@
+diff --git a/chrome/browser/ui/BUILD.gn b/chrome/browser/ui/BUILD.gn
+index ff5b402eb7af216b1c22c61d4dde24e3d747ea45..2771d5da1039d9774c48103f569260134c91ee6b 100644
+--- a/chrome/browser/ui/BUILD.gn
++++ b/chrome/browser/ui/BUILD.gn
+@@ -565,6 +565,9 @@ jumbo_split_static_library("ui") {
+     "//ui/webui",
+     "//v8:v8_version",
+   ]
++  deps += [
++    "//brave/browser/ui",
++  ]
+   allow_circular_includes_from +=
+       [ "//chrome/browser/ui/webui/bluetooth_internals" ]
+ 
+@@ -2324,10 +2327,13 @@ jumbo_split_static_library("ui") {
+       ]
+       deps += [ "//google_update" ]
+     } else {
+-      sources += [
+-        "webui/help/version_updater_basic.cc",
+-        "webui/help/version_updater_basic.h",
+-      ]
++      if (!is_official_build) {
++        # In official build, //brave/browser/ui handles.
++        sources += [
++          "webui/help/version_updater_basic.cc",
++          "webui/help/version_updater_basic.h",
++        ]
++      }
+     }
+   } else {  # 'OS!="win"
+     # The Cast Linux build sets toolkit_views to false, but many files in this

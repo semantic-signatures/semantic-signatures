@@ -1,0 +1,28 @@
+diff --git a/chrome/common/BUILD.gn b/chrome/common/BUILD.gn
+index 15dcd3acac69be8ec9ec5f8f2eb9e0f6b68c88fd..944f5f34ebbf89bc5bec61e86cfcf962af1593ca 100644
+--- a/chrome/common/BUILD.gn
++++ b/chrome/common/BUILD.gn
+@@ -78,6 +78,7 @@ source_set("channel_info") {
+   if (is_android) {
+     public_deps += [ "//components/version_info/android:channel_getter" ]
+   }
++  if (brave_chromium_build) { deps = [ "//brave/common:channel_info" ] }
+ }
+ 
+ source_set("ini_parser") {
+@@ -208,6 +209,7 @@ static_library("common") {
+   ]
+ 
+   public_deps = [
++    "//brave/common",
+     ":available_offline_content_mojom",
+     ":buildflags",
+     ":channel_info",
+@@ -543,6 +545,7 @@ static_library("non_code_constants") {
+     "//printing/buildflags",
+     "//ui/base:buildflags",
+   ]
++  if (brave_chromium_build) { configs += [ "//brave/common:constants_configs" ] }
+ }
+ 
+ component("chrome_features") {

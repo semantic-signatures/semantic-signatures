@@ -1,0 +1,12 @@
+diff --git a/chrome/browser/ui/views/toolbar/browser_actions_container.h b/chrome/browser/ui/views/toolbar/browser_actions_container.h
+index 02585782bd6e1e14498b5e24040a2765b6d7ba9f..6c5370fed014a328c991fce388396ebb0eb44dd0 100644
+--- a/chrome/browser/ui/views/toolbar/browser_actions_container.h
++++ b/chrome/browser/ui/views/toolbar/browser_actions_container.h
+@@ -253,6 +253,7 @@ class BrowserActionsContainer : public views::View,
+   static views::FlexRule GetFlexRule();
+ 
+  protected:
++  friend class BraveToolbarView;
+   // Overridden from views::View:
+   void ViewHierarchyChanged(
+       const views::ViewHierarchyChangedDetails& details) override;

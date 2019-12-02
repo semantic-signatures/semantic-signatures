@@ -1,0 +1,13 @@
+diff --git a/chrome/browser/plugins/chrome_plugin_service_filter.cc b/chrome/browser/plugins/chrome_plugin_service_filter.cc
+index 5c2a2d0adf1ca353d4ab8dd23475c9d6e6df3b55..dc8f62521ba5c78fcee7e79d028ee8ddc8964e7f 100644
+--- a/chrome/browser/plugins/chrome_plugin_service_filter.cc
++++ b/chrome/browser/plugins/chrome_plugin_service_filter.cc
+@@ -52,7 +52,7 @@ class ProfileContentSettingObserver : public content_settings::Observer {
+     PluginService::GetInstance()->PurgePluginListCache(profile_, false);
+ 
+     const GURL primary(primary_pattern.ToString());
+-    if (primary.is_valid()) {
++    if (primary.is_valid() && resource_identifier.length() == 0) {
+       DCHECK_EQ(ContentSettingsPattern::Relation::IDENTITY,
+                 ContentSettingsPattern::Wildcard().Compare(secondary_pattern));
+       PluginUtils::RememberFlashChangedForSite(map, primary);

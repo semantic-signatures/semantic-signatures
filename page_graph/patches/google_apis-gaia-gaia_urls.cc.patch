@@ -1,0 +1,13 @@
+diff --git a/google_apis/gaia/gaia_urls.cc b/google_apis/gaia/gaia_urls.cc
+index c464febee00f4ce5334a95861c2bd46807dcf4f6..7951c546a97cc14965b3d38e07d28f55a3942034 100644
+--- a/google_apis/gaia/gaia_urls.cc
++++ b/google_apis/gaia/gaia_urls.cc
+@@ -14,7 +14,7 @@ namespace {
+ 
+ // Gaia service constants
+ const char kDefaultGoogleUrl[] = "http://google.com";
+-const char kDefaultGaiaUrl[] = "https://accounts.google.com";
++const char kDefaultGaiaUrl[] = "https://no-thanks.invalid"; // Leave this as a patch instead of considering chromium_src override
+ const char kDefaultGoogleApisBaseUrl[] = "https://www.googleapis.com";
+ const char kDefaultOAuthAccountManagerBaseUrl[] =
+     "https://oauthaccountmanager.googleapis.com";

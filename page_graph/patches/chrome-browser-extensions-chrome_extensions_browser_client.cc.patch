@@ -1,0 +1,27 @@
+diff --git a/chrome/browser/extensions/chrome_extensions_browser_client.cc b/chrome/browser/extensions/chrome_extensions_browser_client.cc
+index 87a8ac4f1635d0f11067da7644987a2cff16aa06..4fc1deebd4ad047fa9f00efbd2d5490041b5d32e 100644
+--- a/chrome/browser/extensions/chrome_extensions_browser_client.cc
++++ b/chrome/browser/extensions/chrome_extensions_browser_client.cc
+@@ -9,6 +9,8 @@
+ #include "base/command_line.h"
+ #include "base/logging.h"
+ #include "base/version.h"
++#include "brave/browser/extensions/brave_component_extension_resource_manager.h"
++#include "brave/browser/extensions/brave_extensions_browser_api_provider.h"
+ #include "build/build_config.h"
+ #include "chrome/browser/app_mode/app_mode_utils.h"
+ #include "chrome/browser/browser_process.h"
+@@ -91,11 +93,12 @@ bool ExtensionsDisabled(const base::CommandLine& command_line) {
+ ChromeExtensionsBrowserClient::ChromeExtensionsBrowserClient() {
+   AddAPIProvider(std::make_unique<CoreExtensionsBrowserAPIProvider>());
+   AddAPIProvider(std::make_unique<ChromeExtensionsBrowserAPIProvider>());
++  AddAPIProvider(std::make_unique<BraveExtensionsBrowserAPIProvider>());
+ 
+   process_manager_delegate_.reset(new ChromeProcessManagerDelegate);
+   api_client_.reset(new ChromeExtensionsAPIClient);
+   SetCurrentChannel(chrome::GetChannel());
+-  resource_manager_.reset(new ChromeComponentExtensionResourceManager());
++  resource_manager_.reset(new BraveComponentExtensionResourceManager());
+ }
+ 
+ ChromeExtensionsBrowserClient::~ChromeExtensionsBrowserClient() {}

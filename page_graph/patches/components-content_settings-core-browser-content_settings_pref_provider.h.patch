@@ -1,0 +1,12 @@
+diff --git a/components/content_settings/core/browser/content_settings_pref_provider.h b/components/content_settings/core/browser/content_settings_pref_provider.h
+index 5bc8a3bdffbe3588d9a4edb9d3e1b68c45ddf78d..f239c48b49842cdeb5e4a615c40f7444825f62cb 100644
+--- a/components/content_settings/core/browser/content_settings_pref_provider.h
++++ b/components/content_settings/core/browser/content_settings_pref_provider.h
+@@ -64,6 +64,7 @@ class PrefProvider : public UserModifiableProvider {
+   void SetClockForTesting(base::Clock* clock);
+ 
+  private:
++  friend class BravePrefProvider;
+   friend class DeadlockCheckerObserver;  // For testing.
+ 
+   void Notify(const ContentSettingsPattern& primary_pattern,

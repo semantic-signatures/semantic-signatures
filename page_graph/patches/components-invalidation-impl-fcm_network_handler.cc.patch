@@ -1,0 +1,12 @@
+diff --git a/components/invalidation/impl/fcm_network_handler.cc b/components/invalidation/impl/fcm_network_handler.cc
+index 3bc63c9a0fc111a591aa7c2119fd38ee04e7e15a..688daccecaea85ad34630121be4d3c3ae0c841be 100644
+--- a/components/invalidation/impl/fcm_network_handler.cc
++++ b/components/invalidation/impl/fcm_network_handler.cc
+@@ -113,6 +113,7 @@ FCMNetworkHandler::~FCMNetworkHandler() {
+ }
+ 
+ void FCMNetworkHandler::StartListening() {
++  return; // feature disabled in Brave
+   if (IsListening()) {
+     StopListening();
+   }

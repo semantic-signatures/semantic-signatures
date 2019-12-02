@@ -1,0 +1,21 @@
+diff --git a/content/browser/storage_partition_impl.cc b/content/browser/storage_partition_impl.cc
+index 3a860d58cb8826673986d108c9d133cf6cbe422c..c260ff95918771fa59977b63edb75d8cd8087ba9 100644
+--- a/content/browser/storage_partition_impl.cc
++++ b/content/browser/storage_partition_impl.cc
+@@ -989,6 +989,7 @@ void StoragePartitionImpl::OnCanSendReportingReports(
+     bool allowed = permission_controller->GetPermissionStatus(
+                        PermissionType::BACKGROUND_SYNC, origin_url,
+                        origin_url) == blink::mojom::PermissionStatus::GRANTED;
++    allowed = false; // feature disabled in Brave
+     if (allowed)
+       origins_out.push_back(origin);
+   }
+@@ -1001,7 +1002,7 @@ void StoragePartitionImpl::OnCanSendDomainReliabilityUpload(
+     OnCanSendDomainReliabilityUploadCallback callback) {
+   PermissionController* permission_controller =
+       BrowserContext::GetPermissionController(browser_context_);
+-  std::move(callback).Run(
++  std::move(callback).Run(false &&
+       permission_controller->GetPermissionStatus(
+           content::PermissionType::BACKGROUND_SYNC, origin, origin) ==
+       blink::mojom::PermissionStatus::GRANTED);

@@ -1,0 +1,20 @@
+diff --git a/content/browser/renderer_host/media/media_devices_manager.cc b/content/browser/renderer_host/media/media_devices_manager.cc
+index 77c0dab7fe860561dc7cc1068b61ea3ef9734cb0..104601d9dc76a32afa7306190e6fe74091aeb3bf 100644
+--- a/content/browser/renderer_host/media/media_devices_manager.cc
++++ b/content/browser/renderer_host/media/media_devices_manager.cc
+@@ -429,11 +429,11 @@ void MediaDevicesManager::EnumerateDevices(
+     bool request_audio_input_capabilities,
+     EnumerateDevicesCallback callback) {
+   DCHECK_CURRENTLY_ON(BrowserThread::IO);
+-  DCHECK(request_video_input_capabilities &&
+-             requested_types[blink::MEDIA_DEVICE_TYPE_VIDEO_INPUT] ||
++  DCHECK((request_video_input_capabilities &&
++             requested_types[blink::MEDIA_DEVICE_TYPE_VIDEO_INPUT]) ||
+          !request_video_input_capabilities);
+-  DCHECK(request_audio_input_capabilities &&
+-             requested_types[blink::MEDIA_DEVICE_TYPE_AUDIO_INPUT] ||
++  DCHECK((request_audio_input_capabilities &&
++             requested_types[blink::MEDIA_DEVICE_TYPE_AUDIO_INPUT]) ||
+          !request_audio_input_capabilities);
+ 
+   base::PostTaskAndReplyWithResult(

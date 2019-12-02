@@ -1,0 +1,13 @@
+diff --git a/extensions/browser/updater/update_service.cc b/extensions/browser/updater/update_service.cc
+index b1908b73fa56b1343ab83e08a70646d74abe6900..21f25d55b195fd5c8cafa79bbf5bbd68104a9a42 100644
+--- a/extensions/browser/updater/update_service.cc
++++ b/extensions/browser/updater/update_service.cc
+@@ -32,7 +32,7 @@ namespace extensions {
+ namespace {
+ 
+ // 98% of update checks have 22 or less extensions.
+-constexpr size_t kMaxExtensionsPerUpdate = 22;
++constexpr size_t kMaxExtensionsPerUpdate = 1;
+ 
+ void SendUninstallPingCompleteCallback(update_client::Error error) {}
+ 
